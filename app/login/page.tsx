@@ -2,6 +2,8 @@
 import { Button, Card, CardBody, CardFooter, Input } from "@nextui-org/react";
 import Link from "next/link";
 
+import { login } from "@/action/user";
+
 export default function Login() {
   return (
     <div className="flex flex-col items-center justify-center">
@@ -12,26 +14,38 @@ export default function Login() {
             Enter your email and password to login to your account.
           </p>
         </div>
-
-        <CardBody className="space-y-4">
-          <div className="space-y-2">
-            <Input required id="email" label="Email" size="sm" type="email" />
-          </div>
-          <div className="space-y-2">
-            <Input
-              required
-              id="password"
-              label="Password"
-              size="sm"
-              type="password"
-            />
-          </div>
-        </CardBody>
-        <CardFooter>
-          <Button className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]">
-            Login
-          </Button>
-        </CardFooter>
+        <form action={login}>
+          <CardBody className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                required
+                id="email"
+                label="Email"
+                name="email"
+                size="sm"
+                type="email"
+              />
+            </div>
+            <div className="space-y-2">
+              <Input
+                required
+                id="password"
+                label="Password"
+                name="password"
+                size="sm"
+                type="password"
+              />
+            </div>
+          </CardBody>
+          <CardFooter>
+            <Button
+              className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]"
+              type="submit"
+            >
+              Login
+            </Button>
+          </CardFooter>
+        </form>
         <div className="my-4 text-center">
           <span className="text-sm">Need to create an account?</span>
           <Link

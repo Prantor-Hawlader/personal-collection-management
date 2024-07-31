@@ -2,6 +2,8 @@
 import { Button, Card, CardBody, CardFooter, Input } from "@nextui-org/react";
 import Link from "next/link";
 
+import { register } from "@/action/user";
+
 export default function Register() {
   return (
     <div className="flex flex-col items-center justify-center">
@@ -13,28 +15,48 @@ export default function Register() {
           </p>
         </div>
 
-        <CardBody className="space-y-4">
-          <div className="space-y-2">
-            <Input required id="name" label="Name" size="sm" type="text" />
-          </div>
-          <div className="space-y-2">
-            <Input required id="email" label="Email" size="sm" type="email" />
-          </div>
-          <div className="space-y-2">
-            <Input
-              required
-              id="password"
-              label="Password"
-              size="sm"
-              type="password"
-            />
-          </div>
-        </CardBody>
-        <CardFooter>
-          <Button className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]">
-            Login
-          </Button>
-        </CardFooter>
+        <form action={register}>
+          <CardBody className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                required
+                id="name"
+                label="Name"
+                name="name"
+                size="sm"
+                type="text"
+              />
+            </div>
+            <div className="space-y-2">
+              <Input
+                required
+                id="email"
+                label="Email"
+                name="email"
+                size="sm"
+                type="email"
+              />
+            </div>
+            <div className="space-y-2">
+              <Input
+                required
+                id="password"
+                label="Password"
+                name="password"
+                size="sm"
+                type="password"
+              />
+            </div>
+          </CardBody>
+          <CardFooter>
+            <Button
+              className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]"
+              type="submit"
+            >
+              Login
+            </Button>
+          </CardFooter>
+        </form>
         <div className="my-4 text-center">
           <span className="text-sm">Already have an account?</span>
           <Link
