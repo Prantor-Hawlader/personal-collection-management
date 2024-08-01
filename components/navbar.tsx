@@ -18,8 +18,8 @@ import { Button } from "@nextui-org/button";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
 import { Logo, SearchIcon } from "@/components/icons";
-import { getSession } from "@/lib/session";
 import { signOut } from "@/auth";
+import { getSession } from "@/lib/session";
 
 export const Navbar = async () => {
   const session = await getSession();

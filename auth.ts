@@ -1,17 +1,17 @@
-import NextAuth, { CredentialsSignin } from "next-auth";
+import NextAuth, { CredentialsSignin, Session, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import Google from "next-auth/providers/google";
 import { JWT } from "next-auth/jwt";
+
+import prisma from "./db/prisma";
 // import { PrismaClient } from "@prisma/client";
 // import { PrismaAdapter } from "@auth/prisma-adapter";
 
-import prisma from "./db/prisma";
-
-// const prismaClient = new PrismaClient()
+// const prismaClient = new PrismaClient();
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  // adapter : PrismaAdapter(prismaClient),
+  // adapter: PrismaAdapter(prismaClient),
   providers: [
     Google,
 
@@ -64,7 +64,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async session({ session, token }: { token: JWT; session: any }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token?.sub && token?.role) {
         session.user.id = token.sub;
         session.user.role = token.role;
@@ -73,7 +73,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
 
-    async jwt({ token, user }: { token: JWT; user: any }) {
+    async jwt({ token, user }: { token: JWT; user: User }) {
       if (user) {
         token.role = user.role;
       }
