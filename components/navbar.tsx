@@ -18,8 +18,14 @@ import { Button } from "@nextui-org/button";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
 import { Logo, SearchIcon } from "@/components/icons";
+import { getSession } from "@/lib/session";
+import { signOut } from "@/auth";
 
-export const Navbar = () => {
+export const Navbar = async () => {
+  const session = await getSession();
+  const user = session?.user;
+
+  console.log(session?.user);
   const searchInput = (
     <Input
       aria-label="Search"
@@ -73,11 +79,27 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          <NextLink href="/login">
-            <Button className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]">
-              <p className="font-bold text-md">Login</p>
-            </Button>
-          </NextLink>
+          {!user ? (
+            <NextLink href="/login">
+              <Button className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]">
+                <p className="font-bold text-md">Login</p>
+              </Button>
+            </NextLink>
+          ) : (
+            <form
+              action={async () => {
+                "use server";
+                await signOut();
+              }}
+            >
+              <Button
+                className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]"
+                type="submit"
+              >
+                <p className="font-bold text-md">Logout</p>
+              </Button>
+            </form>
+          )}
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>

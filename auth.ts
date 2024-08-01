@@ -2,10 +2,16 @@ import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import Google from "next-auth/providers/google";
+import { JWT } from "next-auth/jwt";
+// import { PrismaClient } from "@prisma/client";
+// import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import prisma from "./db/prisma";
 
+// const prismaClient = new PrismaClient()
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  // adapter : PrismaAdapter(prismaClient),
   providers: [
     Google,
 
@@ -58,7 +64,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }: { token: JWT; session: any }) {
       if (token?.sub && token?.role) {
         session.user.id = token.sub;
         session.user.role = token.role;
@@ -67,7 +73,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user: any }) {
       if (user) {
         token.role = user.role;
       }
