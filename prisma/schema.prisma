@@ -17,3 +17,65 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+model Collection {
+  id                  String  @id @default(cuid())
+  name                String
+  description         String
+  userId              String
+  categoryId          String
+  customString1State  Boolean @default(false)
+  customString1Name   String?
+  customString2State  Boolean @default(false)
+  customString2Name   String?
+  customString3State  Boolean @default(false)
+  customString3Name   String?
+  customInteger1State Boolean @default(false)
+  customInteger1Name  String?
+  customInteger2State Boolean @default(false)
+  customInteger2Name  String?
+  customInteger3State Boolean @default(false)
+  customInteger3Name  String?
+  customText1State    Boolean @default(false)
+  customText1Name     String?
+  customText2State    Boolean @default(false)
+  customText2Name     String?
+  customText3State    Boolean @default(false)
+  customText3Name     String?
+  customBoolean1State Boolean @default(false)
+  customBoolean1Name  String?
+  customBoolean2State Boolean @default(false)
+  customBoolean2Name  String?
+  customBoolean3State Boolean @default(false)
+  customBoolean3Name  String?
+  customDate1State    Boolean @default(false)
+  customDate1Name     String?
+  customDate2State    Boolean @default(false)
+  customDate2Name     String?
+  customDate3State    Boolean @default(false)
+  customDate3Name     String?
+  items               Item[]
+}
+
+model Item {
+  id             String     @id @default(cuid())
+  name           String
+  tags           String[]
+  customString1  String?
+  customString2  String?
+  customString3  String?
+  customInt1     Int?
+  customInt2     Int?
+  customInt3     Int?
+  customText1    String?
+  customText2    String?
+  customText3    String?
+  customBoolean1 Boolean?
+  customBoolean2 Boolean?
+  customBoolean3 Boolean?
+  customDate1    DateTime?
+  customDate2    DateTime?
+  customDate3    DateTime?
+  collection     Collection @relation(fields: [collectionId], references: [id])
+  collectionId   String
+}

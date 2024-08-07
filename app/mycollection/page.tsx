@@ -1,9 +1,14 @@
-import { title } from "@/components/primitives";
+"use client";
+import React from "react";
 
-export default function BlogPage() {
+import CollectionForm from "@/components/CollectionForm";
+
+const Collections = () => {
   return (
     <div>
-      <h1 className={title()}>MY Collection</h1>
+      <CollectionForm />
     </div>
   );
-}
+};
+
+export default Collections;

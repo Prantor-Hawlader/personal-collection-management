@@ -13,19 +13,15 @@ import {
 import { link as linkStyles } from "@nextui-org/theme";
 import clsx from "clsx";
 import NextLink from "next/link";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 
 import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
 import { Logo, SearchIcon } from "@/components/icons";
 import { signOut } from "@/auth";
-import { getSession } from "@/lib/session";
 
-export const Navbar = async () => {
-  const session = await getSession();
-  const user = session?.user;
-
-  console.log(session?.user);
+export const Navbar = ({ user }: any) => {
+  // console.log(session?.user);
   const searchInput = (
     <Input
       aria-label="Search"
