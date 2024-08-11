@@ -1,12 +1,21 @@
-import React from "react";
+import dynamic from "next/dynamic";
 
-import NewItemForm from "@/components/ItemForm";
 import prisma from "@/db/prisma";
+import NewItemForm from "@/components/ItemForm";
 
-const collection = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const ItemTable = dynamic(async () => await import("@/components/ItemTable"), {
+  ssr: false,
+});
+
+const collection = async ({ params }: { params: { collectionId: string } }) => {
+  const { collectionId } = params;
+  const items = await prisma.item.findMany({
+    where: { collectionId },
+  });
+  console.log("individual collection page rendered");
+
   const collection = await prisma.collection.findUnique({
-    where: { id },
+    where: { id: collectionId },
     include: {
       items: {
         select: {
@@ -31,8 +40,8 @@ const collection = async ({ params }: { params: { id: string } }) => {
   });
 
   return (
-    <div>
-      <NewItemForm collection={collection} />
+    <div className="">
+      <ItemTable collection={collection} item={items} />
     </div>
   );
 };

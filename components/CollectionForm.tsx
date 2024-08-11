@@ -15,6 +15,7 @@ const customFieldTypes = [
 ];
 
 export default function NewCollectionForm() {
+  console.log("collection form renderd");
   const [customFields, setCustomFields] = useState<Record<string, string[]>>(
     Object.fromEntries(customFieldTypes.map((type) => [type.name, []]))
   );

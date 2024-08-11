@@ -1,5 +1,4 @@
 "use server";
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import prisma from "@/db/prisma";
@@ -17,7 +16,6 @@ export async function createItem(formData: FormData) {
     collectionId,
   };
 
-  // Process custom fields
   formData.forEach((value, key) => {
     if (key.startsWith("custom_")) {
       const [_, fieldType, fieldNumber] = key.split("_");
@@ -34,15 +32,29 @@ export async function createItem(formData: FormData) {
       }
     }
   });
+  for (let i = 1; i <= 3; i++) {
+    const booleanField = `customBoolean${i}`;
 
+    if (!(booleanField in itemData)) {
+      itemData[booleanField] = false;
+    }
+  }
   try {
     await prisma.item.create({ data: itemData });
   } catch (error) {
-    // console.error("Error creating item:", error);
-    // In a real application, you'd want to handle this error more gracefully
     throw new Error("Failed to create item");
   } finally {
     revalidatePath(`/mycollection/${collectionId}`);
-    redirect("/mycollection");
+  }
+}
+
+export async function deleteItem(itemId: any, collectionId: string) {
+  try {
+    await prisma.item.delete({ where: { id: itemId } });
+  } catch (error) {
+    throw new Error("Failed to delete item");
+  } finally {
+    console.log("itemId and cid", itemId, collectionId);
+    revalidatePath(`/mycollection/${collectionId}`);
   }
 }
