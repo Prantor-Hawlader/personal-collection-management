@@ -1,27 +1,29 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 import prisma from "@/db/prisma";
+import { getSession } from "@/lib/session";
 
 const customFieldTypes = ["String", "Text", "Boolean", "Date", "Integer"];
 
 export async function createCollection(formData: FormData) {
-  // Extract basic form data
+  const session = await getSession();
+  const userId = session?.user?.id;
+
+  if (!session) return;
+
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const category = formData.get("category") as string;
 
-  // Initialize collection data
   const collectionData: any = {
     name,
     description,
-    userId: "user-id", // Replace with actual user ID, perhaps from a session
+    userId,
     categoryId: category,
   };
 
-  // Process custom fields
   customFieldTypes.forEach((type) => {
     for (let i = 1; i <= 3; i++) {
       const fieldName = formData.get(`custom${type}${i}Name`);
@@ -37,23 +39,14 @@ export async function createCollection(formData: FormData) {
   });
 
   try {
-    // Create the collection using Prisma
-    const newCollection = await prisma.collection.create({
+    await prisma.collection.create({
       data: collectionData,
     });
-
-    // console.log("Created new collection:", newCollection);
-
-    // Revalidate the collections page
-
-    // Redirect to the collections page
+    console.log("collection created");
   } catch (error) {
-    // console.error("Error creating collection:", error);
-    // You might want to return an error message that can be displayed to the user
-
-    return { error: "Failed to create collection. Please try again." };
+    console.log(error);
+    throw new Error("Collection creatation failed");
   } finally {
     revalidatePath("/mycollection");
-    redirect("/");
   }
 }

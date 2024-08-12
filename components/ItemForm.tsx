@@ -1,13 +1,17 @@
 "use client";
 import { Input, Textarea } from "@nextui-org/input";
 import { Checkbox, DatePicker } from "@nextui-org/react";
+import { Collection } from "@prisma/client";
 
 import { createItem } from "@/action/item";
 
+// interface CollectionProps {
+//   collection: Collection | null;
+// }
 export default function NewItemForm({ collection }: any) {
   console.log("item form rendered");
   if (!collection) {
-    return <div>Collection not found</div>;
+    return <div>Empty collection</div>;
   }
 
   const customFields = [
@@ -109,7 +113,7 @@ export default function NewItemForm({ collection }: any) {
                       name={`custom_${type}_${index + 1}`}
                       type="checkbox"
                     >
-                      Option
+                      {collection[`custom${type}${index + 1}Name`]}
                     </Checkbox>
                   )}
                   {type === "Date" && (

@@ -19,6 +19,7 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
 import { Logo, SearchIcon } from "@/components/icons";
 import { signOut } from "@/auth";
+import MyButton from "./MyButton";
 
 export const Navbar = ({ user }: any) => {
   // console.log(session?.user);
@@ -77,9 +78,9 @@ export const Navbar = ({ user }: any) => {
         <NavbarItem className="hidden sm:flex gap-2">
           {!user ? (
             <NextLink href="/login">
-              <Button className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]">
+              <MyButton>
                 <p className="font-bold text-md">Login</p>
-              </Button>
+              </MyButton>
             </NextLink>
           ) : (
             <form
@@ -88,12 +89,9 @@ export const Navbar = ({ user }: any) => {
                 await signOut();
               }}
             >
-              <Button
-                className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]"
-                type="submit"
-              >
+              <MyButton>
                 <p className="font-bold text-md">Logout</p>
-              </Button>
+              </MyButton>
             </form>
           )}
           <ThemeSwitch />

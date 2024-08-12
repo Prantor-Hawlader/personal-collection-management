@@ -8,14 +8,17 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
+  id             String    @id @default(cuid())
   name           String
-  email          String   @unique
+  image          String?
+  email          String    @unique
   password       String?
-  role           String?  @default("user")
+  role           String?   @default("user")
   authProviderId String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  comments       Comment[]
+  likes          Like[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 model Collection {
@@ -58,9 +61,14 @@ model Collection {
 }
 
 model Item {
-  id             String     @id @default(cuid())
-  name           String
-  tags           String[]
+  id     String   @id @default(cuid())
+  name   String
+  userId String
+  tags   String[]
+
+  likes          Int        @default(0)
+  comments       Comment[]
+  likesList      Like[]
   customString1  String?
   customString2  String?
   customString3  String?
@@ -78,4 +86,35 @@ model Item {
   customDate3    DateTime?
   collection     Collection @relation(fields: [collectionId], references: [id])
   collectionId   String
+
+  createdAt DateTime @default(now())
+
+  @@index([collectionId])
+}
+
+model Comment {
+  id     String @id @default(cuid())
+  text   String
+  userId String
+  itemId String
+
+  item Item @relation(fields: [itemId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([itemId])
+  @@index([userId])
+}
+
+model Like {
+  id     String @id @default(cuid())
+  userId String
+  itemId String
+
+  user User @relation(fields: [userId], references: [id])
+  post Item @relation(fields: [itemId], references: [id])
+
+  @@index([itemId])
+  @@index([userId])
 }

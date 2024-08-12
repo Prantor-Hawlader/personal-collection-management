@@ -2,8 +2,13 @@
 import { revalidatePath } from "next/cache";
 
 import prisma from "@/db/prisma";
+import { getSession } from "@/lib/session";
 
 export async function createItem(formData: FormData) {
+  const session = await getSession();
+  const userId = session?.user?.id;
+
+  if (!session) return;
   const collectionId = formData.get("collectionId") as string;
   const name = formData.get("name") as string;
   const tags = (formData.get("tags") as string)
@@ -13,6 +18,7 @@ export async function createItem(formData: FormData) {
   const itemData: any = {
     name,
     tags,
+    userId,
     collectionId,
   };
 
@@ -48,7 +54,7 @@ export async function createItem(formData: FormData) {
   }
 }
 
-export async function deleteItem(itemId: any, collectionId: string) {
+export async function deleteItem(itemId: string, collectionId: string) {
   try {
     await prisma.item.delete({ where: { id: itemId } });
   } catch (error) {
@@ -56,5 +62,63 @@ export async function deleteItem(itemId: any, collectionId: string) {
   } finally {
     console.log("itemId and cid", itemId, collectionId);
     revalidatePath(`/mycollection/${collectionId}`);
+  }
+}
+
+export async function likeItem(itemId: string) {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+  const userId = session.user.id;
+
+  const post = await prisma.item.findUnique({
+    where: { id: itemId },
+    select: {
+      likes: true,
+      likesList: { where: { userId } },
+    },
+  });
+
+  if (!post) throw new Error("Post not found");
+
+  let newLikes: number;
+
+  if (post.likesList.length > 0) {
+    newLikes = post.likes - 1;
+    await prisma.like.deleteMany({ where: { itemId, userId } });
+  } else {
+    newLikes = post.likes + 1;
+    await prisma.like.create({ data: { itemId, userId } });
+  }
+  await prisma.item.update({
+    where: { id: itemId },
+    data: { likes: newLikes },
+  });
+
+  revalidatePath(`/item/${itemId}`);
+
+  return { success: true };
+}
+
+export async function itemComment(formData: FormData) {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+  const userId = session.user.id;
+  const text = formData.get("comment") as string;
+  const itemId = formData.get("itemId") as string;
+
+  try {
+    await prisma.comment.create({
+      data: { text, userId, itemId },
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    revalidatePath(`/item/${itemId}`);
   }
 }
