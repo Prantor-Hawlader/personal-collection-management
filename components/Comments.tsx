@@ -7,7 +7,7 @@ const Comments = ({ comments }: any) => {
 
   return (
     <div className="flex flex-col w-full my-4">
-      {comments.map((comment: Comment) => (
+      {comments.map((comment: any) => (
         <div key={comment.id} className="flex items-center gap-4 mt-6">
           <Avatar
             isBordered
@@ -17,6 +17,7 @@ const Comments = ({ comments }: any) => {
             src="https://images.pexels.com/photos/2078475/pexels-photo-2078475.jpeg"
           />
           <div>
+            <p>{comment.user.name}</p>
             <p className="text-violet-500">{comment.text}</p>
           </div>
         </div>

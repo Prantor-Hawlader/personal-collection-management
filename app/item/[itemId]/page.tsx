@@ -9,13 +9,22 @@ import { itemComment } from "@/action/item";
 const ItemPage = async ({ params }: { params: { itemId: string } }) => {
   const { itemId } = params;
   const session = await getSession();
-  const item = await prisma.item.findUnique({ where: { id: itemId } });
-  const likes = await prisma.like.findMany({ where: { itemId } });
-  const comments = await prisma.comment.findMany({ where: { itemId } });
+  const item = await prisma.item.findUnique({
+    where: { id: itemId },
+    include: { likesList: true },
+  });
+  const collection = await prisma.collection.findUnique({
+    where: { id: item?.collectionId },
+  });
+
+  const comments = await prisma.comment.findMany({
+    where: { itemId },
+    include: { user: true },
+  });
 
   return (
     <div className=" flex flex-col w-full items-center justify-center">
-      <Card item={item} likes={likes} session={session} />
+      <Card collection={collection} item={item!} session={session} />
       <form action={itemComment} className="w-1/2">
         <input name="itemId" type="hidden" value={itemId} />
         <Textarea

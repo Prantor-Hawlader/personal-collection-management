@@ -1,12 +1,10 @@
 import dynamic from "next/dynamic";
 
 import prisma from "@/db/prisma";
-import NewItemForm from "@/components/ItemForm";
 
 const ItemTable = dynamic(async () => await import("@/components/ItemTable"), {
   ssr: false,
 });
-
 const collection = async ({ params }: { params: { collectionId: string } }) => {
   const { collectionId } = params;
   const items = await prisma.item.findMany({
@@ -40,7 +38,7 @@ const collection = async ({ params }: { params: { collectionId: string } }) => {
   });
 
   return (
-    <div className="">
+    <div className="w-full h-full">
       <ItemTable collection={collection} item={items} />
     </div>
   );

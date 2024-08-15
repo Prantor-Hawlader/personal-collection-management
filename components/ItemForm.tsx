@@ -1,61 +1,68 @@
 "use client";
-import { Input, Textarea } from "@nextui-org/input";
-import { Checkbox, DatePicker } from "@nextui-org/react";
-import { Collection } from "@prisma/client";
+import { Input, Textarea, DatePicker } from "@nextui-org/react";
 
 import { createItem } from "@/action/item";
+import {
+  CustomFieldDefinition,
+  customFieldDefinitions,
+} from "@/lib/customField";
 
 // interface CollectionProps {
 //   collection: Collection | null;
 // }
 export default function NewItemForm({ collection }: any) {
   console.log("item form rendered");
-  if (!collection) {
-    return <div>Empty collection</div>;
+
+  function mapCollectionToCustomFields(collection: any) {
+    return customFieldDefinitions.map((def: CustomFieldDefinition) => ({
+      type: def.type,
+      fields: def.fieldNames.map((fieldName) => collection[fieldName]),
+    }));
   }
 
-  const customFields = [
-    {
-      type: "String",
-      fields: [
-        collection.customString1Name,
-        collection.customString2Name,
-        collection.customString3Name,
-      ],
-    },
-    {
-      type: "Int",
-      fields: [
-        collection.customInteger1Name,
-        collection.customInteger2Name,
-        collection.customInteger3Name,
-      ],
-    },
-    {
-      type: "Text",
-      fields: [
-        collection.customText1Name,
-        collection.customText2Name,
-        collection.customText3Name,
-      ],
-    },
-    {
-      type: "Boolean",
-      fields: [
-        collection.customBoolean1Name,
-        collection.customBoolean2Name,
-        collection.customBoolean3Name,
-      ],
-    },
-    {
-      type: "Date",
-      fields: [
-        collection.customDate1Name,
-        collection.customDate2Name,
-        collection.customDate3Name,
-      ],
-    },
-  ];
+  const customFields = mapCollectionToCustomFields(collection);
+  // const customFields = [
+  //   {
+  //     type: "String",
+  //     fields: [
+  //       collection.customString1Name,
+  //       collection.customString2Name,
+  //       collection.customString3Name,
+  //     ],
+  //   },
+  //   {
+  //     type: "Int",
+  //     fields: [
+  //       collection.customInteger1Name,
+  //       collection.customInteger2Name,
+  //       collection.customInteger3Name,
+  //     ],
+  //   },
+  //   {
+  //     type: "Text",
+  //     fields: [
+  //       collection.customText1Name,
+  //       collection.customText2Name,
+  //       collection.customText3Name,
+  //     ],
+  //   },
+  //   {
+  //     type: "Boolean",
+  //     fields: [
+  //       collection.customBoolean1Name,
+  //       collection.customBoolean2Name,
+  //       collection.customBoolean3Name,
+  //     ],
+  //   },
+  //   {
+  //     type: "Date",
+  //     fields: [
+  //       collection.customDate1Name,
+  //       collection.customDate2Name,
+  //       collection.customDate3Name,
+  //     ],
+  //   },
+  // ];
 
   return (
     <div>
@@ -66,18 +73,10 @@ export default function NewItemForm({ collection }: any) {
       >
         <Input name="collectionId" type="hidden" value={collection.id} />
 
-        <Input
-          required
-          id="name"
-          label="Name"
-          name="name"
-          size="sm"
-          type="text"
-        />
+        <Input required label="Name" name="name" size="sm" type="text" />
 
         <Input
           required
-          id="tags"
           label="Tags1, Tags2"
           name="tags"
           size="sm"
@@ -91,8 +90,7 @@ export default function NewItemForm({ collection }: any) {
                 <div key={`${type}_${index}`}>
                   {type === "String" && (
                     <Input
-                      id={`custom_${type}_${index + 1}`}
-                      label="String"
+                      label={collection[`custom${type}${index + 1}Name`]}
                       name={`custom_${type}_${index + 1}`}
                       type="text"
                     />
@@ -100,33 +98,29 @@ export default function NewItemForm({ collection }: any) {
                   {type === "Text" && (
                     <Textarea
                       className="mb-6 md:mb-0"
-                      id={`custom_${type}_${index + 1}`}
-                      label="Description"
+                      label={collection[`custom${type}${index + 1}Name`]}
                       name={`custom_${type}_${index + 1}`}
                       variant="bordered"
                     />
                   )}
                   {type === "Boolean" && (
-                    <Checkbox
-                      defaultSelected
-                      id={`custom_${type}_${index + 1}`}
-                      name={`custom_${type}_${index + 1}`}
-                      type="checkbox"
-                    >
-                      {collection[`custom${type}${index + 1}Name`]}
-                    </Checkbox>
+                    <div className="flex gap-2">
+                      <input
+                        name={`custom_${type}_${index + 1}`}
+                        type="checkbox"
+                      />
+                      <p>{collection[`custom${type}${index + 1}Name`]}</p>
+                    </div>
                   )}
                   {type === "Date" && (
                     <DatePicker
-                      id={`custom_${type}_${index + 1}`}
-                      label="Date"
+                      label={collection[`custom${type}${index + 1}Name`]}
                       name={`custom_${type}_${index + 1}`}
                     />
                   )}
                   {type === "Int" && (
                     <Input
-                      id={`custom_${type}_${index + 1}`}
-                      label="Number"
+                      label={collection[`custom${type}${index + 1}Name`]}
                       name={`custom_${type}_${index + 1}`}
                       type="number"
                     />

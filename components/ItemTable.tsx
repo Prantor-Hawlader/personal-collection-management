@@ -1,7 +1,12 @@
 "use client";
 import React from "react";
-
 import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
   Table,
   TableHeader,
   TableColumn,
@@ -17,11 +22,9 @@ import {
   Pagination,
   Selection,
   SortDescriptor,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
 } from "@nextui-org/react";
 import { Item } from "@prisma/client";
+import Link from "next/link";
 
 import { deleteItem } from "@/action/item";
 
@@ -30,12 +33,12 @@ import { VerticalDotsIcon } from "./icons/VerticalDotsIcon";
 import { ChevronDownIcon } from "./icons/ChevronDownIcon";
 import { SearchIcon } from "./icons/SearchIcon";
 import NewItemForm from "./ItemForm";
-import Link from "next/link";
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "tags", "actions"];
 
 export default function ItemTable({ collection, item }: any) {
   console.log("item table rendered");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const generateHeaderColumns = () => {
     const baseColumns = [
       { key: "name", label: "NAME", sortable: true },
@@ -278,30 +281,33 @@ export default function ItemTable({ collection, item }: any) {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Popover showArrow offset={10} placement="top">
-              <PopoverTrigger>
-                <Button
-                  className="bg-foreground text-background"
-                  endContent={<PlusIcon />}
-                  size="sm"
-                >
-                  Add New
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                {(titleProps) => (
-                  <div className="px-1 py-2 w-full">
-                    <p
-                      className="text-small font-bold text-foreground"
-                      {...titleProps}
-                    >
-                      Fill Up The New Item
-                    </p>
-                    <NewItemForm collection={collection} />
-                  </div>
+
+            <Modal
+              isOpen={isOpen}
+              placement="bottom-center"
+              onOpenChange={onOpenChange}
+            >
+              <ModalContent>
+                {(onClose) => (
+                  <>
+                    <ModalHeader className="flex flex-col gap-1">
+                      Create Item
+                    </ModalHeader>
+                    <ModalBody>
+                      <NewItemForm collection={collection} />
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button color="danger" variant="flat" onPress={onClose}>
+                        Close
+                      </Button>
+                      <Button color="primary" onPress={onClose}>
+                        Sign in
+                      </Button>
+                    </ModalFooter>
+                  </>
                 )}
-              </PopoverContent>
-            </Popover>
+              </ModalContent>
+            </Modal>
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -376,46 +382,57 @@ export default function ItemTable({ collection, item }: any) {
   );
 
   return (
-    <Table
-      isCompact
-      removeWrapper
-      aria-label="Example table with custom cells, pagination and sorting"
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      checkboxesProps={{
-        classNames: {
-          wrapper: "after:bg-foreground after:text-background text-background",
-        },
-      }}
-      classNames={classNames}
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.key}
-            align={column.key === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.label}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey.toString())}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <div className="w-full h-full ml-0">
+      <Button
+        className="bg-foreground text-background"
+        endContent={<PlusIcon />}
+        size="sm"
+        onPress={onOpen}
+      >
+        Add New
+      </Button>
+      <Table
+        isCompact
+        removeWrapper
+        aria-label="Example table with custom cells, pagination and sorting"
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        checkboxesProps={{
+          classNames: {
+            wrapper:
+              "after:bg-foreground after:text-background text-background",
+          },
+        }}
+        classNames={classNames}
+        selectedKeys={selectedKeys}
+        selectionMode="multiple"
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn
+              key={column.key}
+              align={column.key === "actions" ? "center" : "start"}
+              allowsSorting={column.sortable}
+            >
+              {column.label}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody emptyContent={"No users found"} items={sortedItems}>
+          {(item) => (
+            <TableRow key={item.id}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey.toString())}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

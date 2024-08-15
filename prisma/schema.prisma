@@ -13,7 +13,8 @@ model User {
   image          String?
   email          String    @unique
   password       String?
-  role           String?   @default("user")
+  role           String    @default("user")
+  status         String    @default("active")
   authProviderId String?
   comments       Comment[]
   likes          Like[]
@@ -99,7 +100,7 @@ model Comment {
   itemId String
 
   item Item @relation(fields: [itemId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -112,8 +113,8 @@ model Like {
   userId String
   itemId String
 
-  user User @relation(fields: [userId], references: [id])
-  post Item @relation(fields: [itemId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id])
 
   @@index([itemId])
   @@index([userId])
