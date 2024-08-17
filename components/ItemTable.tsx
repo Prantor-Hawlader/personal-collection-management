@@ -1,44 +1,35 @@
 "use client";
-import React from "react";
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Input,
   Button,
-  DropdownTrigger,
   Dropdown,
-  DropdownMenu,
   DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
   Pagination,
   Selection,
   SortDescriptor,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
 } from "@nextui-org/react";
 import { Item } from "@prisma/client";
 import Link from "next/link";
+import React from "react";
 
 import { deleteItem } from "@/action/item";
 
-import { PlusIcon } from "./icons/PlusIcon";
-import { VerticalDotsIcon } from "./icons/VerticalDotsIcon";
 import { ChevronDownIcon } from "./icons/ChevronDownIcon";
 import { SearchIcon } from "./icons/SearchIcon";
-import NewItemForm from "./ItemForm";
+import { VerticalDotsIcon } from "./icons/VerticalDotsIcon";
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "tags", "actions"];
 
 export default function ItemTable({ collection, item }: any) {
   console.log("item table rendered");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const generateHeaderColumns = () => {
     const baseColumns = [
       { key: "name", label: "NAME", sortable: true },
@@ -69,7 +60,7 @@ export default function ItemTable({ collection, item }: any) {
     });
 
     const customIntColumns = createCustomColumns({
-      keys: ["customInt1", "customInt2", "customInt3"],
+      keys: ["customInteger1", "customInteger2", "customInteger3"],
       fields: [
         collection.customInteger1Name,
         collection.customInteger2Name,
@@ -183,7 +174,21 @@ export default function ItemTable({ collection, item }: any) {
     }
 
     if (columnKey === "tags") {
-      return Array.isArray(cellValue) ? cellValue.join(", ") : cellValue;
+      console.log("Tags cellValue:", cellValue);
+      if (Array.isArray(cellValue) && cellValue.length > 0) {
+        return cellValue.map((tag) => tag.name || tag).join(", ");
+      } else if (
+        cellValue &&
+        typeof cellValue === "object" &&
+        "name" in cellValue
+      ) {
+        return cellValue.name;
+      } else if (typeof cellValue === "string") {
+        return cellValue;
+      } else {
+        console.log("Unexpected tags format:", cellValue);
+        return "No tags";
+      }
     }
     switch (columnKey) {
       case "name":
@@ -281,33 +286,6 @@ export default function ItemTable({ collection, item }: any) {
                 ))}
               </DropdownMenu>
             </Dropdown>
-
-            <Modal
-              isOpen={isOpen}
-              placement="bottom-center"
-              onOpenChange={onOpenChange}
-            >
-              <ModalContent>
-                {(onClose) => (
-                  <>
-                    <ModalHeader className="flex flex-col gap-1">
-                      Create Item
-                    </ModalHeader>
-                    <ModalBody>
-                      <NewItemForm collection={collection} />
-                    </ModalBody>
-                    <ModalFooter>
-                      <Button color="danger" variant="flat" onPress={onClose}>
-                        Close
-                      </Button>
-                      <Button color="primary" onPress={onClose}>
-                        Sign in
-                      </Button>
-                    </ModalFooter>
-                  </>
-                )}
-              </ModalContent>
-            </Modal>
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -383,14 +361,6 @@ export default function ItemTable({ collection, item }: any) {
 
   return (
     <div className="w-full h-full ml-0">
-      <Button
-        className="bg-foreground text-background"
-        endContent={<PlusIcon />}
-        size="sm"
-        onPress={onOpen}
-      >
-        Add New
-      </Button>
       <Table
         isCompact
         removeWrapper

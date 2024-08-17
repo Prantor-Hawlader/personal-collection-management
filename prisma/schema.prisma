@@ -22,60 +22,62 @@ model User {
   updatedAt      DateTime  @updatedAt
 }
 
+model Category {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  collections Collection[]
+}
+
 model Collection {
-  id                  String  @id @default(cuid())
-  name                String
-  description         String
-  userId              String
-  categoryId          String
-  customString1State  Boolean @default(false)
-  customString1Name   String?
-  customString2State  Boolean @default(false)
-  customString2Name   String?
-  customString3State  Boolean @default(false)
-  customString3Name   String?
-  customInteger1State Boolean @default(false)
-  customInteger1Name  String?
-  customInteger2State Boolean @default(false)
-  customInteger2Name  String?
-  customInteger3State Boolean @default(false)
-  customInteger3Name  String?
-  customText1State    Boolean @default(false)
-  customText1Name     String?
-  customText2State    Boolean @default(false)
-  customText2Name     String?
-  customText3State    Boolean @default(false)
-  customText3Name     String?
-  customBoolean1State Boolean @default(false)
-  customBoolean1Name  String?
-  customBoolean2State Boolean @default(false)
-  customBoolean2Name  String?
-  customBoolean3State Boolean @default(false)
-  customBoolean3Name  String?
-  customDate1State    Boolean @default(false)
-  customDate1Name     String?
-  customDate2State    Boolean @default(false)
-  customDate2Name     String?
-  customDate3State    Boolean @default(false)
-  customDate3Name     String?
-  items               Item[]
+  id                 String   @id @default(cuid())
+  name               String
+  description        String
+  image              String?
+  userId             String
+  category           Category @relation(fields: [categoryId], references: [id])
+  items              Item[]
+  categoryId         String
+  customString1Name  String?
+  customString2Name  String?
+  customString3Name  String?
+  customInteger1Name String?
+  customInteger2Name String?
+  customInteger3Name String?
+  customText1Name    String?
+  customText2Name    String?
+  customText3Name    String?
+  customBoolean1Name String?
+  customBoolean2Name String?
+  customBoolean3Name String?
+  customDate1Name    String?
+  customDate2Name    String?
+  customDate3Name    String?
+
+  @@index([categoryId])
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  items Item[]
 }
 
 model Item {
-  id     String   @id @default(cuid())
-  name   String
-  userId String
-  tags   String[]
-
+  id             String     @id @default(cuid())
+  name           String
+  userId         String
+  tags           Tag[]
   likes          Int        @default(0)
   comments       Comment[]
   likesList      Like[]
+  collectionId   String
+  collection     Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   customString1  String?
   customString2  String?
   customString3  String?
-  customInt1     Int?
-  customInt2     Int?
-  customInt3     Int?
+  customInteger1 Int?
+  customInteger2 Int?
+  customInteger3 Int?
   customText1    String?
   customText2    String?
   customText3    String?
@@ -85,8 +87,6 @@ model Item {
   customDate1    DateTime?
   customDate2    DateTime?
   customDate3    DateTime?
-  collection     Collection @relation(fields: [collectionId], references: [id])
-  collectionId   String
 
   createdAt DateTime @default(now())
 
@@ -99,7 +99,7 @@ model Comment {
   userId String
   itemId String
 
-  item Item @relation(fields: [itemId], references: [id])
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
@@ -114,7 +114,7 @@ model Like {
   itemId String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  item Item @relation(fields: [itemId], references: [id])
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@index([itemId])
   @@index([userId])

@@ -11,13 +11,24 @@ export async function createItem(formData: FormData) {
   if (!session) return;
   const collectionId = formData.get("collectionId") as string;
   const name = formData.get("name") as string;
-  const tags = (formData.get("tags") as string)
-    .split(",")
-    .map((tag) => tag.trim());
+  const tagsValue = formData.get("tags");
+  let tags: string[] = [];
+
+  if (typeof tagsValue === "string") {
+    tags = tagsValue.split(",").map((tag) => tag.trim());
+  } else if (Array.isArray(tagsValue)) {
+    tags = tagsValue.map((tag) => tag.toString().trim());
+  }
+  const tagsData = tags.map((tagName) => ({
+    where: { name: tagName },
+    create: { name: tagName },
+  }));
 
   const itemData: any = {
     name,
-    tags,
+    tags: {
+      connectOrCreate: tagsData,
+    },
     userId,
     collectionId,
   };
@@ -29,7 +40,7 @@ export async function createItem(formData: FormData) {
 
       if (fieldType === "Boolean") {
         itemData[dbField] = value === "on";
-      } else if (fieldType === "Int") {
+      } else if (fieldType === "Integer") {
         itemData[dbField] = parseInt(value as string);
       } else if (fieldType === "Date") {
         itemData[dbField] = new Date(value as string);
@@ -45,10 +56,12 @@ export async function createItem(formData: FormData) {
       itemData[booleanField] = false;
     }
   }
+  console.log("Item data to be inserted:", JSON.stringify(itemData, null, 2));
   try {
     await prisma.item.create({ data: itemData });
-  } catch (error) {
-    throw new Error("Failed to create item");
+  } catch (error: any) {
+    console.error("Error details:", error);
+    throw new Error(`Failed to create item: ${error.message}`);
   } finally {
     revalidatePath(`/mycollection/${collectionId}`);
   }

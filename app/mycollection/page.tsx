@@ -12,12 +12,13 @@ const CollectionTable = dynamic(
 const Collections = async () => {
   console.log("Collection page rendered");
   const collections = await prisma.collection.findMany();
+  const categories = await prisma.category.findMany();
 
   return (
     <div>
       <CollectionTable collections={collections} />
 
-      <CollectionForm />
+      <CollectionForm categories={categories} />
     </div>
   );
 };

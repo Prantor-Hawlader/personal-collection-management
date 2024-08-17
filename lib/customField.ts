@@ -1,6 +1,6 @@
 // customFields.ts
 
-export type FieldType = "String" | "Int" | "Text" | "Boolean" | "Date";
+export type FieldType = "String" | "Integer" | "Text" | "Boolean" | "Date";
 
 export interface CustomFieldDefinition {
   type: FieldType;
@@ -13,7 +13,7 @@ export const customFieldDefinitions: CustomFieldDefinition[] = [
     fieldNames: ["customString1Name", "customString2Name", "customString3Name"],
   },
   {
-    type: "Int",
+    type: "Integer",
     fieldNames: [
       "customInteger1Name",
       "customInteger2Name",

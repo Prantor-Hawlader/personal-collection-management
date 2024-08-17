@@ -29,10 +29,8 @@ export async function createCollection(formData: FormData) {
       const fieldName = formData.get(`custom${type}${i}Name`);
 
       if (fieldName) {
-        const stateKey = `custom${type}${i}State`;
         const nameKey = `custom${type}${i}Name`;
 
-        collectionData[stateKey] = true;
         collectionData[nameKey] = fieldName;
       }
     }

@@ -23,27 +23,27 @@ const MyCard = ({
   session: any;
   collection: any;
 }) => {
-  const alreadyLike = item.likesList;
-  const [isLiked, setIsLiked] = React.useState(alreadyLike === 1);
-  const [likeCount, setLikeCount] = React.useState(item.likes);
+  // const alreadyLike = item.likesList;
+  // const [isLiked, setIsLiked] = React.useState(alreadyLike === 1);
+  // const [likeCount, setLikeCount] = React.useState(item.likes);
 
-  const handleLike = async () => {
-    if (!session) return;
+  // const handleLike = async () => {
+  //   if (!session) return;
 
-    // Optimistic update
+  //   // Optimistic update
 
-    try {
-      setIsLiked(!isLiked);
-      setLikeCount((prevCount: number) =>
-        isLiked ? prevCount - 1 : prevCount + 1
-      );
-      // Perform the actual like action
-      await likeItem(item.id);
-    } catch (error) {
-      // If there's an error, revert the optimistic update
-      console.error("Error liking item:", error);
-    }
-  };
+  //   try {
+  //     setIsLiked(!isLiked);
+  //     setLikeCount((prevCount: number) =>
+  //       isLiked ? prevCount - 1 : prevCount + 1
+  //     );
+  //     // Perform the actual like action
+  //     await likeItem(item.id);
+  //   } catch (error) {
+  //     // If there's an error, revert the optimistic update
+  //     console.error("Error liking item:", error);
+  //   }
+  // };
 
   function mapCollectionToCustomFields(collection: any) {
     return customFieldDefinitions.map((def: CustomFieldDefinition) => ({
@@ -97,21 +97,21 @@ const MyCard = ({
         </MagicCard>
       </div>
       <div className="flex gap-1 items-center mb-2">
-        {isLiked ? (
+        {/* {isLiked ? (
           <AiOutlineLike
             className="cursor-pointer"
             size={25}
             onClick={handleLike}
           />
-        ) : (
-          <AiFillLike
-            className="cursor-pointer"
-            size={25}
-            onClick={handleLike}
-          />
-        )}
+        ) : ( */}
+        <AiFillLike
+          className="cursor-pointer"
+          size={25}
+          onClick={() => likeItem(item.id)}
+        />
+
         <span className="text-xs text-zinc-400 tracking-tighter">
-          {likeCount}
+          {item.likes}
         </span>
       </div>
     </NeonGradientCard>

@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { Category } from "@prisma/client";
 
 import { createCollection } from "@/action/collection";
-
-const categories = ["Books", "Signs", "Silverware", "Other"];
 
 const customFieldTypes = [
   { name: "String", max: 3 },
@@ -14,7 +13,10 @@ const customFieldTypes = [
   { name: "Date", max: 3 },
 ];
 
-export default function NewCollectionForm() {
+type CategoryProps = {
+  categories: Category[];
+};
+export default function NewCollectionForm({ categories }: CategoryProps) {
   console.log("collection form renderd");
   const [customFields, setCustomFields] = useState<Record<string, string[]>>(
     Object.fromEntries(customFieldTypes.map((type) => [type.name, []]))
@@ -71,8 +73,8 @@ export default function NewCollectionForm() {
           name="category"
         >
           {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
             </option>
           ))}
         </select>

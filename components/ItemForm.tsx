@@ -1,5 +1,11 @@
 "use client";
-import { Input, Textarea, DatePicker } from "@nextui-org/react";
+import {
+  Input,
+  Textarea,
+  DatePicker,
+  Autocomplete,
+  AutocompleteItem,
+} from "@nextui-org/react";
 
 import { createItem } from "@/action/item";
 import {
@@ -10,7 +16,7 @@ import {
 // interface CollectionProps {
 //   collection: Collection | null;
 // }
-export default function NewItemForm({ collection }: any) {
+export default function NewItemForm({ collection, tags }: any) {
   console.log("item form rendered");
 
   function mapCollectionToCustomFields(collection: any) {
@@ -21,48 +27,6 @@ export default function NewItemForm({ collection }: any) {
   }
 
   const customFields = mapCollectionToCustomFields(collection);
-  // const customFields = [
-  //   {
-  //     type: "String",
-  //     fields: [
-  //       collection.customString1Name,
-  //       collection.customString2Name,
-  //       collection.customString3Name,
-  //     ],
-  //   },
-  //   {
-  //     type: "Int",
-  //     fields: [
-  //       collection.customInteger1Name,
-  //       collection.customInteger2Name,
-  //       collection.customInteger3Name,
-  //     ],
-  //   },
-  //   {
-  //     type: "Text",
-  //     fields: [
-  //       collection.customText1Name,
-  //       collection.customText2Name,
-  //       collection.customText3Name,
-  //     ],
-  //   },
-  //   {
-  //     type: "Boolean",
-  //     fields: [
-  //       collection.customBoolean1Name,
-  //       collection.customBoolean2Name,
-  //       collection.customBoolean3Name,
-  //     ],
-  //   },
-  //   {
-  //     type: "Date",
-  //     fields: [
-  //       collection.customDate1Name,
-  //       collection.customDate2Name,
-  //       collection.customDate3Name,
-  //     ],
-  //   },
-  // ];
 
   return (
     <div>
@@ -75,13 +39,19 @@ export default function NewItemForm({ collection }: any) {
 
         <Input required label="Name" name="name" size="sm" type="text" />
 
-        <Input
-          required
-          label="Tags1, Tags2"
+        <Autocomplete
+          allowsCustomValue
+          multiple
+          label="Tags"
           name="tags"
-          size="sm"
-          type="text"
-        />
+          placeholder="Enter tags"
+        >
+          {tags.map((tag: any) => (
+            <AutocompleteItem key={tag.id} value={tag.name}>
+              {tag.name}
+            </AutocompleteItem>
+          ))}
+        </Autocomplete>
 
         {customFields.map(({ type, fields }) =>
           fields.map((field, index) => {
@@ -118,7 +88,7 @@ export default function NewItemForm({ collection }: any) {
                       name={`custom_${type}_${index + 1}`}
                     />
                   )}
-                  {type === "Int" && (
+                  {type === "Integer" && (
                     <Input
                       label={collection[`custom${type}${index + 1}Name`]}
                       name={`custom_${type}_${index + 1}`}
@@ -143,3 +113,46 @@ export default function NewItemForm({ collection }: any) {
     </div>
   );
 }
+
+// const customFields = [
+//   {
+//     type: "String",
+//     fields: [
+//       collection.customString1Name,
+//       collection.customString2Name,
+//       collection.customString3Name,
+//     ],
+//   },
+//   {
+//     type: "Int",
+//     fields: [
+//       collection.customInteger1Name,
+//       collection.customInteger2Name,
+//       collection.customInteger3Name,
+//     ],
+//   },
+//   {
+//     type: "Text",
+//     fields: [
+//       collection.customText1Name,
+//       collection.customText2Name,
+//       collection.customText3Name,
+//     ],
+//   },
+//   {
+//     type: "Boolean",
+//     fields: [
+//       collection.customBoolean1Name,
+//       collection.customBoolean2Name,
+//       collection.customBoolean3Name,
+//     ],
+//   },
+//   {
+//     type: "Date",
+//     fields: [
+//       collection.customDate1Name,
+//       collection.customDate2Name,
+//       collection.customDate3Name,
+//     ],
+//   },
+// ];
