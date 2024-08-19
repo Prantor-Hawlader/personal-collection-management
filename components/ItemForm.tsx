@@ -1,11 +1,6 @@
 "use client";
-import {
-  Input,
-  Textarea,
-  DatePicker,
-  Autocomplete,
-  AutocompleteItem,
-} from "@nextui-org/react";
+import { Input, Textarea, DatePicker } from "@nextui-org/react";
+import CreatableSelect from "react-select/creatable";
 
 import { createItem } from "@/action/item";
 import {
@@ -13,9 +8,6 @@ import {
   customFieldDefinitions,
 } from "@/lib/customField";
 
-// interface CollectionProps {
-//   collection: Collection | null;
-// }
 export default function NewItemForm({ collection, tags }: any) {
   console.log("item form rendered");
 
@@ -27,6 +19,10 @@ export default function NewItemForm({ collection, tags }: any) {
   }
 
   const customFields = mapCollectionToCustomFields(collection);
+  const tagOptions = tags.map((tag: any) => ({
+    value: tag.id,
+    label: tag.name,
+  }));
 
   return (
     <div>
@@ -39,19 +35,7 @@ export default function NewItemForm({ collection, tags }: any) {
 
         <Input required label="Name" name="name" size="sm" type="text" />
 
-        <Autocomplete
-          allowsCustomValue
-          multiple
-          label="Tags"
-          name="tags"
-          placeholder="Enter tags"
-        >
-          {tags.map((tag: any) => (
-            <AutocompleteItem key={tag.id} value={tag.name}>
-              {tag.name}
-            </AutocompleteItem>
-          ))}
-        </Autocomplete>
+        <CreatableSelect isMulti name="tags" options={tagOptions} />
 
         {customFields.map(({ type, fields }) =>
           fields.map((field, index) => {

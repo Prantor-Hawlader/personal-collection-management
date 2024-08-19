@@ -8,18 +8,19 @@ datasource db {
 }
 
 model User {
-  id             String    @id @default(cuid())
+  id             String       @id @default(cuid())
   name           String
   image          String?
-  email          String    @unique
+  email          String       @unique
   password       String?
-  role           String    @default("user")
-  status         String    @default("active")
+  role           String       @default("user")
+  status         String       @default("active")
   authProviderId String?
+  collection     Collection[]
   comments       Comment[]
   likes          Like[]
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 model Category {
@@ -35,6 +36,7 @@ model Collection {
   image              String?
   userId             String
   category           Category @relation(fields: [categoryId], references: [id])
+  user               User     @relation(fields: [userId], references: [id])
   items              Item[]
   categoryId         String
   customString1Name  String?

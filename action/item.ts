@@ -11,23 +11,30 @@ export async function createItem(formData: FormData) {
   if (!session) return;
   const collectionId = formData.get("collectionId") as string;
   const name = formData.get("name") as string;
-  const tagsValue = formData.get("tags");
-  let tags: string[] = [];
+  const tagsValue = formData.getAll("tags");
+  console.log("tagsvalue", tagsValue);
 
-  if (typeof tagsValue === "string") {
-    tags = tagsValue.split(",").map((tag) => tag.trim());
-  } else if (Array.isArray(tagsValue)) {
-    tags = tagsValue.map((tag) => tag.toString().trim());
-  }
-  const tagsData = tags.map((tagName) => ({
-    where: { name: tagName },
-    create: { name: tagName },
-  }));
+  const existingTagIds: string[] = [];
+  const newTagNames: string[] = [];
+
+  tagsValue.forEach((tag) => {
+    if (typeof tag === "string") {
+      if (tag.startsWith("cl") && tag.length > 20) {
+        existingTagIds.push(tag);
+      } else {
+        newTagNames.push(tag);
+      }
+    }
+  });
 
   const itemData: any = {
     name,
     tags: {
-      connectOrCreate: tagsData,
+      connect: existingTagIds.map((id) => ({ id })),
+      connectOrCreate: newTagNames.map((name) => ({
+        where: { name },
+        create: { name },
+      })),
     },
     userId,
     collectionId,
@@ -56,12 +63,12 @@ export async function createItem(formData: FormData) {
       itemData[booleanField] = false;
     }
   }
-  console.log("Item data to be inserted:", JSON.stringify(itemData, null, 2));
+
   try {
     await prisma.item.create({ data: itemData });
-  } catch (error: any) {
-    console.error("Error details:", error);
-    throw new Error(`Failed to create item: ${error.message}`);
+  } catch (error) {
+    console.error("Error creating item:", error);
+    throw new Error("Failed to create item");
   } finally {
     revalidatePath(`/mycollection/${collectionId}`);
   }
@@ -69,7 +76,38 @@ export async function createItem(formData: FormData) {
 
 export async function deleteItem(itemId: string, collectionId: string) {
   try {
-    await prisma.item.delete({ where: { id: itemId } });
+    const item = await prisma.item.findUnique({
+      where: { id: itemId },
+      include: { tags: true },
+    });
+
+    if (!item) {
+      throw new Error("Item not found");
+    }
+
+    await prisma.item.delete({
+      where: { id: itemId },
+    });
+
+    for (const tag of item.tags) {
+      const associatedItemsCount = await prisma.item.count({
+        where: { tags: { some: { id: tag.id } } },
+      });
+
+      if (
+        associatedItemsCount === 0 &&
+        tag.name !== "Mysterious" &&
+        tag.name !== "Adventure"
+      ) {
+        await prisma.tag.delete({
+          where: { id: tag.id },
+        });
+      }
+    }
+
+    console.log(
+      `Item with id ${itemId} and associated orphaned tags deleted successfully.`
+    );
   } catch (error) {
     throw new Error("Failed to delete item");
   } finally {

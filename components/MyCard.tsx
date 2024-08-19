@@ -67,7 +67,7 @@ const MyCard = ({
         </div>
         <MagicCard className="h-full w-full p-5">
           <b className="">Name: {item.name}</b>
-          <p className="">Tags: {item.tags}</p>
+          {/* <p className="">Tags: {item.tags.name}</p> */}
           {customFields.map(({ type, fields }) =>
             fields.map((field, index) => {
               if (field) {
@@ -84,7 +84,7 @@ const MyCard = ({
                         new Date(fieldValue).toLocaleDateString()}
                       {(type === "String" ||
                         type === "Text" ||
-                        type === "Int") &&
+                        type === "Integer") &&
                         fieldValue}
                     </p>
                   </div>

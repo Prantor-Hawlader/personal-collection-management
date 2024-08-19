@@ -1,5 +1,3 @@
-// customFields.ts
-
 export type FieldType = "String" | "Integer" | "Text" | "Boolean" | "Date";
 
 export interface CustomFieldDefinition {

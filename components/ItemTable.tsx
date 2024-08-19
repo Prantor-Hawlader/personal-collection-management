@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { Item } from "@prisma/client";
+import { Item, Tag } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 
@@ -175,21 +175,20 @@ export default function ItemTable({ collection, item }: any) {
 
     if (columnKey === "tags") {
       console.log("Tags cellValue:", cellValue);
-      if (Array.isArray(cellValue) && cellValue.length > 0) {
-        return cellValue.map((tag) => tag.name || tag).join(", ");
-      } else if (
-        cellValue &&
-        typeof cellValue === "object" &&
-        "name" in cellValue
-      ) {
-        return cellValue.name;
-      } else if (typeof cellValue === "string") {
-        return cellValue;
-      } else {
-        console.log("Unexpected tags format:", cellValue);
-        return "No tags";
-      }
+
+      console.log("ami");
+
+      return cellValue.map((tag: Tag, index: number) => (
+        // <Link key={tag.id} href={`/tag/${tag.id}`}>
+        <span key={tag.id}>
+          <Link className="text-blue-500" href={`/tag/${tag.id}`}>
+            {tag.name}
+          </Link>
+          {index < cellValue.length - 1 && ", "}
+        </span>
+      ));
     }
+
     switch (columnKey) {
       case "name":
         return <p className="text-default-500">{cellValue}</p>;
