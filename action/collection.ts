@@ -1,9 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 
 import prisma from "@/db/prisma";
 import { getSession } from "@/lib/session";
+
+import { uploadImage } from "./uploadImage";
 
 const customFieldTypes = ["String", "Text", "Boolean", "Date", "Integer"];
 
@@ -11,17 +14,26 @@ export async function createCollection(formData: FormData) {
   const session = await getSession();
   const userId = session?.user?.id;
 
-  if (!session) return;
+  if (!userId) return;
 
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const category = formData.get("category") as string;
+  const imageFile = formData.get("image") as File | null;
 
-  const collectionData: any = {
+  let url: string | undefined;
+
+  if (imageFile && imageFile.size > 0) {
+    const preset = "collectionerImage" as string;
+
+    url = await uploadImage(imageFile, preset);
+  }
+  const collectionData: Prisma.CollectionCreateInput = {
     name,
     description,
-    userId,
-    categoryId: category,
+    user: { connect: { id: userId } },
+    category: { connect: { id: category } },
+    ...(url && { image: url }),
   };
 
   customFieldTypes.forEach((type) => {
@@ -29,9 +41,10 @@ export async function createCollection(formData: FormData) {
       const fieldName = formData.get(`custom${type}${i}Name`);
 
       if (fieldName) {
-        const nameKey = `custom${type}${i}Name`;
+        const nameKey =
+          `custom${type}${i}Name` as keyof Prisma.CollectionCreateInput;
 
-        collectionData[nameKey] = fieldName;
+        collectionData[nameKey] = fieldName as string;
       }
     }
   });

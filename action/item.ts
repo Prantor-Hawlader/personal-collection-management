@@ -1,5 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import prisma from "@/db/prisma";
 import { getSession } from "@/lib/session";
@@ -12,6 +13,7 @@ export async function createItem(formData: FormData) {
   const collectionId = formData.get("collectionId") as string;
   const name = formData.get("name") as string;
   const tagsValue = formData.getAll("tags");
+
   console.log("tagsvalue", tagsValue);
 
   const existingTagIds: string[] = [];
@@ -71,6 +73,79 @@ export async function createItem(formData: FormData) {
     throw new Error("Failed to create item");
   } finally {
     revalidatePath(`/mycollection/${collectionId}`);
+  }
+}
+export async function editItem(formData: FormData) {
+  const session = await getSession();
+
+  if (!session) return;
+  const collectionId = formData.get("collectionId") as string;
+  const itemId = formData.get("itemId") as string;
+  const name = formData.get("name") as string;
+  const tagsValue = formData.getAll("tags");
+
+  console.log("tagsvalue", tagsValue);
+
+  const existingTagIds: string[] = [];
+  const newTagNames: string[] = [];
+
+  tagsValue.forEach((tag) => {
+    if (typeof tag === "string") {
+      if (tag.startsWith("cl") && tag.length > 20) {
+        existingTagIds.push(tag);
+      } else {
+        newTagNames.push(tag);
+      }
+    }
+  });
+
+  const NewitemData: any = {
+    name,
+    tags: {
+      set: [],
+      connect: existingTagIds.map((id) => ({ id })),
+      connectOrCreate: newTagNames.map((name) => ({
+        where: { name },
+        create: { name },
+      })),
+    },
+  };
+
+  formData.forEach((value, key) => {
+    if (key.startsWith("custom_")) {
+      const [_, fieldType, fieldNumber] = key.split("_");
+      const dbField = `custom${fieldType}${fieldNumber}`;
+
+      if (fieldType === "Boolean") {
+        NewitemData[dbField] = value === "on";
+      } else if (fieldType === "Integer") {
+        NewitemData[dbField] = parseInt(value as string);
+      } else if (fieldType === "Date") {
+        NewitemData[dbField] = new Date(value as string);
+      } else {
+        NewitemData[dbField] = value;
+      }
+    }
+  });
+  for (let i = 1; i <= 3; i++) {
+    const booleanField = `customBoolean${i}`;
+
+    if (!(booleanField in NewitemData)) {
+      NewitemData[booleanField] = false;
+    }
+  }
+
+  try {
+    await prisma.item.update({
+      where: { id: itemId },
+      data: NewitemData,
+    });
+  } catch (error) {
+    console.error("Error editing item:", error);
+    throw new Error("Failed to edit item");
+  } finally {
+    revalidatePath(`/mycollection/${collectionId}`);
+    redirect(`/mycollection/${collectionId}`);
   }
 }
 

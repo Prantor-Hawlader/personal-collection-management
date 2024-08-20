@@ -4,7 +4,6 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
@@ -34,6 +33,7 @@ const AddNewItem = ({ collection, tags }: any) => {
       <Modal
         isOpen={isOpen}
         placement="bottom-center"
+        scrollBehavior="inside"
         onOpenChange={onOpenChange}
       >
         <ModalContent>
@@ -43,16 +43,12 @@ const AddNewItem = ({ collection, tags }: any) => {
                 Create Item
               </ModalHeader>
               <ModalBody>
-                <NewItemForm collection={collection} tags={tags} />
+                <NewItemForm
+                  collection={collection}
+                  tags={tags}
+                  onClose={onClose}
+                />
               </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Sign in
-                </Button>
-              </ModalFooter>
             </>
           )}
         </ModalContent>

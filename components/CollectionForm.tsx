@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { Category } from "@prisma/client";
+import { Input } from "@nextui-org/input";
 
 import { createCollection } from "@/action/collection";
+import dynamic from "next/dynamic";
 
 const customFieldTypes = [
   { name: "String", max: 3 },
@@ -17,6 +19,9 @@ type CategoryProps = {
   categories: Category[];
 };
 export default function NewCollectionForm({ categories }: CategoryProps) {
+  const MDEditor = dynamic(async () => await import("@uiw/react-md-editor"), {
+    ssr: false,
+  });
   console.log("collection form renderd");
   const [customFields, setCustomFields] = useState<Record<string, string[]>>(
     Object.fromEntries(customFieldTypes.map((type) => [type.name, []]))
@@ -39,7 +44,7 @@ export default function NewCollectionForm({ categories }: CategoryProps) {
   };
 
   return (
-    <form action={createCollection} className="max-w-lg mx-auto mt-8">
+    <form action={createCollection} className="w-full mx-auto mt-8">
       <div className="mb-4">
         <label className="block mb-2" htmlFor="name">
           Name
@@ -63,6 +68,9 @@ export default function NewCollectionForm({ categories }: CategoryProps) {
           name="description"
         />
       </div>
+
+      {/* <MDEditor name="description" /> */}
+
       <div className="mb-4">
         <label className="block mb-2" htmlFor="category">
           Category
@@ -78,6 +86,9 @@ export default function NewCollectionForm({ categories }: CategoryProps) {
             </option>
           ))}
         </select>
+      </div>
+      <div className="mb-4">
+        <Input label="Upload image" name="image" type="file" />
       </div>
       <div className="mb-4">
         <h3 className="mb-2">Custom Fields</h3>

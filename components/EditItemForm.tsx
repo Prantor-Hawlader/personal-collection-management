@@ -1,20 +1,16 @@
 "use client";
-import {
-  Input,
-  Textarea,
-  DatePicker,
-  Autocomplete,
-  AutocompleteItem,
-} from "@nextui-org/react";
+import { Input, Textarea, DatePicker } from "@nextui-org/react";
+import CreatableSelect from "react-select/creatable";
 
-import { updateItem } from "@/action/item";
+import { editItem } from "@/action/item";
 import {
   CustomFieldDefinition,
   customFieldDefinitions,
 } from "@/lib/customField";
 
-export default function EditItemForm({ item, collection, tags }: any) {
-  console.log("edit item form rendered");
+export default function EditItemForm({ item, tags }: any) {
+  console.log("item form rendered");
+  const collection = item.collection;
 
   function mapCollectionToCustomFields(collection: any) {
     return customFieldDefinitions.map((def: CustomFieldDefinition) => ({
@@ -24,104 +20,103 @@ export default function EditItemForm({ item, collection, tags }: any) {
   }
 
   const customFields = mapCollectionToCustomFields(collection);
+  const itemTag = item.tags.map((tag: any) => ({
+    value: tag.id,
+    label: tag.name,
+  }));
+  console.log("itemTAg", itemTag);
+  const tagOptions = tags.map((tag: any) => ({
+    value: tag.id,
+    label: tag.name,
+  }));
 
   return (
     <div>
       <form
-        action={updateItem}
+        action={editItem}
         className="w-full grid grid-cols-2 gap-2 mb-2"
-        id="editForm"
+        id="myForm"
       >
-        <Input name="id" type="hidden" value={item.id} />
         <Input name="collectionId" type="hidden" value={collection.id} />
+        <Input name="itemId" type="hidden" value={item.id} />
 
         <Input
           required
+          defaultValue={item.name}
           label="Name"
           name="name"
           size="sm"
           type="text"
-          defaultValue={item.name}
         />
 
-        <Autocomplete
-          allowsCustomValue
-          multiple
-          defaultSelectedKeys={item.tags.map((tag: any) => tag.name)}
-          label="Tags"
+        <CreatableSelect
+          isMulti
+          defaultValue={itemTag}
           name="tags"
-          placeholder="Enter tags"
-        >
-          {tags.map((tag: any) => (
-            <AutocompleteItem key={tag.id} value={tag.name}>
-              {tag.name}
-            </AutocompleteItem>
-          ))}
-        </Autocomplete>
+          options={tagOptions}
+        />
 
         {customFields.map(({ type, fields }) =>
           fields.map((field, index) => {
             if (field) {
-              const fieldName = `custom${type}${index + 1}`;
               return (
                 <div key={`${type}_${index}`}>
                   {type === "String" && (
                     <Input
-                      label={collection[`${fieldName}Name`]}
-                      name={fieldName}
+                      defaultValue={item[`custom${type}${index + 1}`]}
+                      label={collection[`custom${type}${index + 1}Name`]}
+                      name={`custom_${type}_${index + 1}`}
                       type="text"
-                      defaultValue={item[fieldName] || ""}
                     />
                   )}
                   {type === "Text" && (
                     <Textarea
                       className="mb-6 md:mb-0"
-                      label={collection[`${fieldName}Name`]}
-                      name={fieldName}
+                      defaultValue={item[`custom${type}${index + 1}`]}
+                      label={collection[`custom${type}${index + 1}Name`]}
+                      name={`custom_${type}_${index + 1}`}
                       variant="bordered"
-                      defaultValue={item[fieldName] || ""}
                     />
                   )}
                   {type === "Boolean" && (
                     <div className="flex gap-2">
                       <input
-                        name={fieldName}
+                        defaultValue={item[`custom${type}${index + 1}`]}
+                        name={`custom_${type}_${index + 1}`}
                         type="checkbox"
-                        defaultChecked={item[fieldName] || false}
                       />
-                      <p>{collection[`${fieldName}Name`]}</p>
+                      <p>{collection[`custom${type}${index + 1}Name`]}</p>
                     </div>
                   )}
                   {type === "Date" && (
                     <DatePicker
-                      label={collection[`${fieldName}Name`]}
-                      name={fieldName}
-                      defaultValue={
-                        item[fieldName] ? new Date(item[fieldName]) : undefined
-                      }
+                      defaultValue={item[`custom${type}${index + 1}`]}
+                      label={collection[`custom${type}${index + 1}Name`]}
+                      name={`custom_${type}_${index + 1}`}
                     />
                   )}
                   {type === "Integer" && (
                     <Input
-                      label={collection[`${fieldName}Name`]}
-                      name={fieldName}
+                      defaultValue={item[`custom${type}${index + 1}`]}
+                      label={collection[`custom${type}${index + 1}Name`]}
+                      name={`custom_${type}_${index + 1}`}
                       type="number"
-                      defaultValue={item[fieldName] || ""}
                     />
                   )}
                 </div>
               );
             }
+
             return null;
           })
         )}
       </form>
       <button
-        className="px-4 py-2 bg-blue-500 text-white rounded"
-        form="editForm"
+        className="px-4 py-2 bg-green-500 text-white rounded"
+        form="myForm"
         type="submit"
       >
-        Update Item
+        Save Item
       </button>
     </div>
   );

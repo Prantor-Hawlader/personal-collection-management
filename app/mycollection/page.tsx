@@ -15,7 +15,7 @@ const Collections = async () => {
   const categories = await prisma.category.findMany();
 
   return (
-    <div>
+    <div className="w-full">
       <CollectionTable collections={collections} />
 
       <CollectionForm categories={categories} />

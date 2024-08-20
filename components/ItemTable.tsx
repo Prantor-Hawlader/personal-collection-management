@@ -206,7 +206,9 @@ export default function ItemTable({ collection, item }: any) {
                 <DropdownItem>
                   <Link href={`/item/${item.id}`}>View</Link>
                 </DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
+                <DropdownItem>
+                  <Link href={`/editItem/${item.id}`}>Edit</Link>
+                </DropdownItem>
 
                 <DropdownItem
                   onClick={() => {

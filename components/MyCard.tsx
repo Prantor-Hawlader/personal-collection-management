@@ -61,8 +61,10 @@ const MyCard = ({
           <Image
             alt="random pic"
             className="w-full rounded-l-lg h-full shadow-sm"
+            height={600}
             objectFit="cover"
-            src={pic}
+            src={collection.image ? collection.image : pic}
+            width={500}
           />
         </div>
         <MagicCard className="h-full w-full p-5">
