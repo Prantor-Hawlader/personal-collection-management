@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/session";
 import prisma from "@/db/prisma";
-import SearchResultModal from "@/components/SearchResult";
+import SearchResultModal from "@/components/SearchResultModal";
 
 export default async function SearchPage({
   searchParams,
@@ -11,7 +11,7 @@ export default async function SearchPage({
   const searchTerm = searchParams.q;
 
   if (!session) {
-    return <div>Please log in to search.</div>;
+    return <p>Please log in to search.</p>;
   }
 
   const items = await prisma.item.findMany({
@@ -33,9 +33,5 @@ export default async function SearchPage({
     },
   });
 
-  return (
-    <div>
-      <SearchResultModal items={items} searchTerm={searchTerm} />
-    </div>
-  );
+  return <SearchResultModal items={items} searchTerm={searchTerm} />;
 }

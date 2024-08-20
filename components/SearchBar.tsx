@@ -1,41 +1,45 @@
-// SearchBar.tsx
 "use client";
-import { Input } from "@nextui-org/input";
-import { useState, ChangeEventHandler } from "react";
-import { SearchIcon } from "./icons";
 
-type SearchBarProps = {
-  onSearch: (term: string) => void;
-};
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@nextui-org/react";
+import { useDisclosure } from "@nextui-org/react";
 
-const SearchBar = ({ onSearch }: SearchBarProps) => {
+import SearchResultModal from "@/components/SearchResultModal";
+
+const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
 
-  const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleSearchChange = (e: any) => {
     const value = e.target.value;
+
     setSearchTerm(value);
-    onSearch(value);
+    if (value) {
+      onOpen();
+    } else {
+      onClose();
+    }
   };
 
+  useEffect(() => {
+    if (searchTerm) {
+      router.push(`/search?q=${searchTerm}`);
+    }
+  }, [searchTerm, router]);
+
   return (
-    <div>
+    <>
       <Input
-        aria-label="Search"
-        classNames={{
-          inputWrapper: "bg-default-100",
-          input: "text-sm",
-        }}
-        labelPlacement="outside"
         placeholder="Search..."
-        startContent={
-          <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-        }
         type="search"
         value={searchTerm}
         onChange={handleSearchChange}
       />
-    </div>
+      {isOpen && <SearchResultModal searchTerm={searchTerm} />}
+    </>
   );
 };
 
-export default SearchBar;
+export default SearchInput;
