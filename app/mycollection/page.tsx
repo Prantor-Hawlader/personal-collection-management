@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
-import CollectionForm from "@/components/CollectionForm";
 import prisma from "@/db/prisma";
+import AddNewCollection from "@/components/AddnewCollection";
 
 const CollectionTable = dynamic(
   async () => await import("@/components/CollectionTable"),
@@ -9,16 +9,21 @@ const CollectionTable = dynamic(
     ssr: false,
   }
 );
+
 const Collections = async () => {
   console.log("Collection page rendered");
-  const collections = await prisma.collection.findMany();
+  const collections = await prisma.collection.findMany({
+    include: {
+      user: true,
+      category: true,
+    },
+  });
   const categories = await prisma.category.findMany();
 
   return (
     <div className="w-full">
+      <AddNewCollection categories={categories} />
       <CollectionTable collections={collections} />
-
-      <CollectionForm categories={categories} />
     </div>
   );
 };

@@ -2,15 +2,19 @@
 import { Tag } from "@prisma/client";
 import Link from "next/link";
 
-const TagCloud = ({ tag }: { tag: Tag }) => {
+const TagCloud = ({ tags }: any) => {
   return (
-    <Link
-      key={tag.id}
-      className="bg-cyan-300 hover:bg-cyan-400 font-bold dark:bg-green-500 dark:hover:bg-green-600 py-1 px-2 rounded-lg "
-      href={`/tag/${tag.id}`}
-    >
-      {tag.name}
-    </Link>
+    <div className="flex justify-start flex-wrap gap-2 max-w-sm my-4 text-sm">
+      {tags.map((tag: any) => (
+        <Link
+          key={tag.id}
+          className="bg-cyan-300 hover:bg-cyan-400 font-bold dark:bg-green-500 dark:hover:bg-green-600 py-1 px-2 rounded-lg "
+          href={`/tag/${tag.id}`}
+        >
+          {tag.name}
+        </Link>
+      ))}
+    </div>
   );
 };
 

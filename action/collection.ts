@@ -61,3 +61,25 @@ export async function createCollection(formData: FormData) {
     revalidatePath("/mycollection");
   }
 }
+
+export async function deleteCollection(collectionId: string) {
+  try {
+    const session = await getSession();
+    const userId = session?.user?.id;
+
+    if (!session) return;
+    if (session?.user.role === "admin") {
+      await prisma.collection.delete({
+        where: { id: collectionId },
+      });
+    } else {
+      await prisma.collection.delete({
+        where: { id: collectionId, userId },
+      });
+    }
+  } catch (error) {
+    throw new Error("Failed to delete collection");
+  } finally {
+    revalidatePath("/mycollection");
+  }
+}

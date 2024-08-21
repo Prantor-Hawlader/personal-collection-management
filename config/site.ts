@@ -1,8 +1,10 @@
+import { Session } from "next-auth";
+
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "Collectioner",
-  description: "Store everything you collection.",
+  description: "Store everything you collect.",
   navItems: [
     {
       label: "Home",
@@ -16,6 +18,7 @@ export const siteConfig = {
     {
       label: "Admin",
       href: "/admin",
+      shouldShow: (session: Session) => session?.user?.role === "admin",
     },
   ],
   navMenuItems: [
@@ -52,11 +55,4 @@ export const siteConfig = {
       href: "/logout",
     },
   ],
-  links: {
-    github: "https://github.com/nextui-org/nextui",
-    twitter: "https://twitter.com/getnextui",
-    docs: "https://nextui.org",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
-  },
 };

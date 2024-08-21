@@ -105,8 +105,8 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
         )}
         <Button
           className="px-4 py-2 bg-green-500 text-white rounded"
-          onPress={onClose}
           type="submit"
+          onPress={onClose}
         >
           Create Item
         </Button>

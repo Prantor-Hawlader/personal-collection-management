@@ -1,18 +1,13 @@
-import { getSession } from "@/lib/session";
+import Link from "next/link";
+
 import prisma from "@/db/prisma";
-import SearchResultModal from "@/components/SearchResultModal";
 
 export default async function SearchPage({
   searchParams,
 }: {
   searchParams: { q: string };
 }) {
-  const session = await getSession();
   const searchTerm = searchParams.q;
-
-  if (!session) {
-    return <p>Please log in to search.</p>;
-  }
 
   const items = await prisma.item.findMany({
     where: {
@@ -25,7 +20,6 @@ export default async function SearchPage({
         },
         { collection: { name: { contains: searchTerm, mode: "insensitive" } } },
       ],
-      userId: session.user.id,
     },
     include: {
       collection: true,
@@ -33,5 +27,24 @@ export default async function SearchPage({
     },
   });
 
-  return <SearchResultModal items={items} searchTerm={searchTerm} />;
+  return (
+    <div className="flex justify-center items-center">
+      {items.map((item: any) => (
+        <div key={item.id}>
+          <span>
+            Item name :{" "}
+            <Link className="text-blue-600" href={`/item/${item.id}`}>
+              {item.name}
+            </Link>{" "}
+          </span>
+
+          <p>Collection: {item.collection.name}</p>
+          {item.comments.some((comment: any) =>
+            comment.text.toLowerCase().includes(searchTerm.toLowerCase())
+          ) && <p>Found in comments</p>}
+        </div>
+      ))}
+      {items.length === 0 && <p>No results found</p>}
+    </div>
+  );
 }

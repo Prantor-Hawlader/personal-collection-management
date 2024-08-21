@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 import { Category } from "@prisma/client";
 import { Input } from "@nextui-org/input";
+import dynamic from "next/dynamic";
+import { Button } from "@nextui-org/button";
 
 import { createCollection } from "@/action/collection";
-import dynamic from "next/dynamic";
 
 const customFieldTypes = [
   { name: "String", max: 3 },
@@ -15,13 +16,18 @@ const customFieldTypes = [
   { name: "Date", max: 3 },
 ];
 
-type CategoryProps = {
+type CollectionFormProps = {
   categories: Category[];
+  onClose: () => void;
 };
-export default function NewCollectionForm({ categories }: CategoryProps) {
+export default function CollectionForm({
+  categories,
+  onClose,
+}: CollectionFormProps) {
   const MDEditor = dynamic(async () => await import("@uiw/react-md-editor"), {
     ssr: false,
   });
+
   console.log("collection form renderd");
   const [customFields, setCustomFields] = useState<Record<string, string[]>>(
     Object.fromEntries(customFieldTypes.map((type) => [type.name, []]))
@@ -80,7 +86,7 @@ export default function NewCollectionForm({ categories }: CategoryProps) {
           id="category"
           name="category"
         >
-          {categories.map((cat) => (
+          {categories.map((cat: Category) => (
             <option key={cat.id} value={cat.id}>
               {cat.name}
             </option>
@@ -124,12 +130,9 @@ export default function NewCollectionForm({ categories }: CategoryProps) {
           </fieldset>
         ))}
       </div>
-      <button
-        className="px-4 py-2 bg-green-500 text-white rounded"
-        type="submit"
-      >
+      <Button color="secondary" type="submit" onPress={onClose}>
         Create Collection
-      </button>
+      </Button>
     </form>
   );
 }

@@ -105,9 +105,7 @@ export default function ItemTable({ collection, item }: any) {
   const columns = generateHeaderColumns();
 
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
-    new Set([])
-  );
+
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
@@ -332,14 +330,9 @@ export default function ItemTable({ collection, item }: any) {
           variant="light"
           onChange={setPage}
         />
-        <span className="text-small text-default-400">
-          {selectedKeys === "all"
-            ? "All items selected"
-            : `${selectedKeys.size} of ${items.length} selected`}
-        </span>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [items.length, page, pages, hasSearchFilter]);
 
   const classNames = React.useMemo(
     () => ({
@@ -375,12 +368,9 @@ export default function ItemTable({ collection, item }: any) {
           },
         }}
         classNames={classNames}
-        selectedKeys={selectedKeys}
-        selectionMode="multiple"
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
       >
         <TableHeader columns={headerColumns}>
@@ -394,7 +384,7 @@ export default function ItemTable({ collection, item }: any) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No users found"} items={sortedItems}>
+        <TableBody emptyContent={"No items found"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (

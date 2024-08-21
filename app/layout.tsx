@@ -9,7 +9,6 @@ import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 
 import { Providers } from "./providers";
-import SearchBar from "@/components/SearchBar";
 
 export const metadata: Metadata = {
   title: {
@@ -35,7 +34,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
-  const user = session?.user;
 
   return (
     <html suppressHydrationWarning lang="en">
@@ -48,8 +46,7 @@ export default async function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
-            <Navbar user={user} />
-            <SearchBar />
+            <Navbar session={session} />
 
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
               {children}

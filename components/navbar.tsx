@@ -20,7 +20,9 @@ import { siteConfig } from "@/config/site";
 import MyButton from "./MyButton";
 import SearchBar from "./SearchBar";
 
-export const Navbar = ({ user }: any) => {
+export const Navbar = ({ session }: any) => {
+  console.log("session", session);
+
   return (
     <NextUINavbar isBordered maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -41,7 +43,7 @@ export const Navbar = ({ user }: any) => {
                 color="foreground"
                 href={item.href}
               >
-                {item.label}
+                {(!item.shouldShow || item.shouldShow(session)) && item.label}
               </NextLink>
             </NavbarItem>
           ))}
@@ -53,7 +55,7 @@ export const Navbar = ({ user }: any) => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          {!user ? (
+          {!session ? (
             <NextLink href="/login">
               <MyButton>
                 <p className="font-bold text-md">Login</p>
@@ -71,6 +73,8 @@ export const Navbar = ({ user }: any) => {
               </MyButton>
             </form>
           )}
+          <SearchBar />
+
           <ThemeSwitch />
         </NavbarItem>
 
@@ -78,13 +82,14 @@ export const Navbar = ({ user }: any) => {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+        <SearchBar />
         <ThemeSwitch />
         <NavbarMenuToggle />
       </NavbarContent>
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
+          {siteConfig.navItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
                 color={
@@ -97,7 +102,7 @@ export const Navbar = ({ user }: any) => {
                 href="#"
                 size="lg"
               >
-                {item.label}
+                {(!item.shouldShow || item.shouldShow(session)) && item.label}
               </Link>
             </NavbarMenuItem>
           ))}

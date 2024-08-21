@@ -8,22 +8,21 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import React from "react";
-import { Collection } from "@prisma/client";
+import { Category } from "@prisma/client";
 
 import { PlusIcon } from "./icons/PlusIcon";
-import NewItemForm from "./ItemForm";
+import CollectionForm from "./CollectionForm";
 
-type CollectionProps = {
-  collection: Collection[];
+type CategoryProps = {
+  categories: Category[];
 };
-const AddNewItem = ({ collection, tags }: any) => {
+const AddNewCollection = ({ categories }: CategoryProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <div>
-      {" "}
+    <div className="my-4">
       <Button
-        className="bg-foreground text-background my-4"
+        className="bg-foreground text-background"
         endContent={<PlusIcon />}
         size="sm"
         onPress={onOpen}
@@ -40,14 +39,10 @@ const AddNewItem = ({ collection, tags }: any) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Create Item
+                Create collection
               </ModalHeader>
               <ModalBody>
-                <NewItemForm
-                  collection={collection}
-                  tags={tags}
-                  onClose={onClose}
-                />
+                <CollectionForm categories={categories} onClose={onClose} />
               </ModalBody>
             </>
           )}
@@ -57,4 +52,4 @@ const AddNewItem = ({ collection, tags }: any) => {
   );
 };
 
-export default AddNewItem;
+export default AddNewCollection;
