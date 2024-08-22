@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import { Category, Collection } from "@prisma/client";
 import { Input } from "@nextui-org/input";
-import dynamic from "next/dynamic";
 import { Button } from "@nextui-org/button";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
+
 import "react-markdown-editor-lite/lib/index.css";
-import { editCollection } from "@/action/collection";
 import { Select, SelectItem } from "@nextui-org/react";
-import MyButton from "./MyButton";
+
+import { editCollection } from "@/action/collection";
 
 const customFieldTypes = [
   { name: "String", max: 3 },
@@ -67,8 +67,8 @@ export default function EditCollectionForm({
 
       <MdEditor
         className="mb-4"
-        name="description"
         defaultValue={collection.description}
+        name="description"
         renderHTML={(text) => mdParser.render(text)}
       />
 
@@ -99,6 +99,7 @@ export default function EditCollectionForm({
                   type="text"
                 />
                 <Button
+                  className="ml-2"
                   type="button"
                   onClick={() => removeCustomField(type.name, index)}
                 >
@@ -107,14 +108,18 @@ export default function EditCollectionForm({
               </div>
             ))}
             {customFields[type.name].length < type.max && (
-              <Button type="button" onClick={() => addCustomField(type.name)}>
+              <Button
+                className="mt-2"
+                type="button"
+                onClick={() => addCustomField(type.name)}
+              >
                 Add {type.name} Field
               </Button>
             )}
           </fieldset>
         ))}
       </div>
-      <Button color="success" onPress={onClose}>
+      <Button color="success" type="submit" onPress={onClose}>
         Edit Collection
       </Button>
     </form>

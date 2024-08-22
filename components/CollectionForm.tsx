@@ -1,16 +1,15 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState } from "react";
 import { Category } from "@prisma/client";
 import { Input } from "@nextui-org/input";
-import dynamic from "next/dynamic";
 import { Button } from "@nextui-org/button";
-import SimpleMDE from "react-simplemde-editor";
-import MDEditor from "@uiw/react-md-editor";
-import JoditEditor from "jodit-react";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
+
 import "react-markdown-editor-lite/lib/index.css";
+import { Select, SelectItem } from "@nextui-org/react";
+
 import { createCollection } from "@/action/collection";
 
 const customFieldTypes = [
@@ -54,50 +53,22 @@ export default function CollectionForm({
 
   return (
     <form action={createCollection} className="w-full mx-auto mt-8">
-      <div className="mb-4">
-        <label className="block mb-2" htmlFor="name">
-          Name
-        </label>
-        <input
-          required
-          className="w-full px-3 py-2 border rounded"
-          id="name"
-          name="name"
-          type="text"
-        />
-      </div>
-      {/* <div className="mb-4">
-        <label className="block mb-2" htmlFor="description">
-          Description
-        </label>
-        <textarea
-          required
-          className="w-full px-3 py-2 border rounded"
-          id="description"
-          name="description"
-        />
-      </div> */}
+      <Input required className="mb-4" name="name" type="text" />
+
       <MdEditor
+        className="mb-4"
         name="description"
         renderHTML={(text) => mdParser.render(text)}
       />
 
-      <div className="mb-4">
-        <label className="block mb-2" htmlFor="category">
-          Category
-        </label>
-        <select
-          className="w-full px-3 py-2 border rounded"
-          id="category"
-          name="category"
-        >
-          {categories.map((cat: Category) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <Select className="mb-4" label="Select an category" name="category">
+        {categories.map((cat: Category) => (
+          <SelectItem key={cat.id} value={cat.id}>
+            {cat.name}
+          </SelectItem>
+        ))}
+      </Select>
+
       <div className="mb-4">
         <Input label="Upload image" name="image" type="file" />
       </div>
@@ -108,34 +79,33 @@ export default function CollectionForm({
             <legend className="font-bold">{type.name} Fields</legend>
             {customFields[type.name].map((_, index) => (
               <div key={index} className="flex items-center mt-2">
-                <input
-                  className="flex-grow px-3 py-2 border rounded mr-2"
+                <Input
                   name={`custom${type.name}${index + 1}Name`}
                   placeholder={`${type.name} field name`}
                   type="text"
                 />
-                <button
-                  className="px-3 py-1 bg-red-500 text-white rounded"
+                <Button
+                  className="ml-2"
                   type="button"
                   onClick={() => removeCustomField(type.name, index)}
                 >
                   Remove
-                </button>
+                </Button>
               </div>
             ))}
             {customFields[type.name].length < type.max && (
-              <button
-                className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
+              <Button
+                className="mt-2"
                 type="button"
                 onClick={() => addCustomField(type.name)}
               >
                 Add {type.name} Field
-              </button>
+              </Button>
             )}
           </fieldset>
         ))}
       </div>
-      <Button color="secondary" type="submit" onPress={onClose}>
+      <Button color="success" type="submit" onPress={onClose}>
         Create Collection
       </Button>
     </form>
