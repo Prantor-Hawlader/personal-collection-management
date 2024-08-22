@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 import prisma from "@/db/prisma";
-import AddNewItem from "@/components/AddNewItem";
+import AddNewItemBtn from "@/components/AddNewItemBtn";
 
 const ItemTable = dynamic(async () => await import("@/components/ItemTable"), {
   ssr: false,
@@ -47,7 +47,7 @@ const collection = async ({ params }: { params: { collectionId: string } }) => {
 
   return (
     <div className="w-full h-full">
-      <AddNewItem collection={collection} tags={tags} />
+      <AddNewItemBtn collection={collection!} tags={tags} />
       <ItemTable collection={collection} item={items} />
     </div>
   );

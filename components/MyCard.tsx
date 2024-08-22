@@ -66,7 +66,7 @@ const MyCard = ({
             height={600}
             objectFit="cover"
             src={collection.image ? collection.image : pic}
-            width={500}
+            width={600}
           />
         </div>
         <MagicCard className="h-full w-full p-5">
@@ -75,7 +75,7 @@ const MyCard = ({
           </p>
           <p className="font-serif">
             {" "}
-            Tags :
+            Tags :{" "}
             {item.tags.map((tag: Tag, index: number) => (
               <span key={tag.id}>
                 <Link className="text-blue-500" href={`/tag/${tag.id}`}>

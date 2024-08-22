@@ -1,3 +1,4 @@
+import TagCard from "@/components/TagCard";
 import prisma from "@/db/prisma";
 
 const TagItem = async ({ params }: { params: { tagId: string } }) => {
@@ -8,11 +9,11 @@ const TagItem = async ({ params }: { params: { tagId: string } }) => {
   });
 
   return (
-    <div>
-      <ol>
-        Item Name :
-        {tags?.items.map((item) => <li key={item.id}>{item.name}</li>)}
-      </ol>
+    <div className="flex justify-center items-center h-full">
+      <div className="text-xl font-extralight text-cyan-300">
+        Items of {tags?.name} tag:
+        <TagCard tags={tags!} />
+      </div>
     </div>
   );
 };

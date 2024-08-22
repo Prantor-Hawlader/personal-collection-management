@@ -34,10 +34,8 @@ export default async function Home() {
     take: 5,
   });
   const tags = await prisma.tag.findMany();
-  console.log("HOme rendered");
 
   return (
-    //   <section className="flex flex-col justify-start gap-4 py-8 md:py-10">
     <div>
       <h2 className={subtitle({ class: "text-center" })}>
         Welcome,{" "}

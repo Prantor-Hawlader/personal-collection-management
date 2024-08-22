@@ -17,7 +17,7 @@ const EditItem = async ({ params }: { params: { itemId: string } }) => {
   });
 
   return (
-    <div>
+    <div className="flex justify-center items-center h-full">
       <EditItemForm item={item} tags={tags} />
     </div>
   );

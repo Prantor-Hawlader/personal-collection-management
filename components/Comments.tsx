@@ -17,8 +17,8 @@ const Comments = ({ comments }: any) => {
             src="https://images.pexels.com/photos/2078475/pexels-photo-2078475.jpeg"
           />
           <div>
-            <p>{comment.user.name}</p>
-            <p className="text-violet-500">{comment.text}</p>
+            <p className="font-mono text-bold">{comment.user.name}</p>
+            <p className="text-cyan-500">{comment.text}</p>
           </div>
         </div>
       ))}

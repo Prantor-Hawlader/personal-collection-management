@@ -8,15 +8,16 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import React from "react";
-import { Collection } from "@prisma/client";
+import { Collection, Tag } from "@prisma/client";
 
 import { PlusIcon } from "./icons/PlusIcon";
 import NewItemForm from "./ItemForm";
 
-type CollectionProps = {
-  collection: Collection[];
+type AddNewItemProps = {
+  collection: Collection;
+  tags: Tag[];
 };
-const AddNewItem = ({ collection, tags }: any) => {
+const AddNewItemBtn = ({ collection, tags }: AddNewItemProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -57,4 +58,4 @@ const AddNewItem = ({ collection, tags }: any) => {
   );
 };
 
-export default AddNewItem;
+export default AddNewItemBtn;

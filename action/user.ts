@@ -15,7 +15,6 @@ const login = async (formData: FormData) => {
   const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user) {
-    // Handle case where user is not found
     return "User not found";
   }
   if (user.status === "blocked") {

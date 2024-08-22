@@ -1,5 +1,5 @@
 "use client";
-import { Input, Textarea, DatePicker } from "@nextui-org/react";
+import { Input, Textarea, DatePicker, Button, Card } from "@nextui-org/react";
 import CreatableSelect from "react-select/creatable";
 
 import { editItem } from "@/action/item";
@@ -8,7 +8,7 @@ import {
   customFieldDefinitions,
 } from "@/lib/customField";
 
-export default function EditItemForm({ item, tags }: any) {
+export default function EditItemForm({ item, tags, onClose }: any) {
   console.log("item form rendered");
   const collection = item.collection;
 
@@ -24,17 +24,16 @@ export default function EditItemForm({ item, tags }: any) {
     value: tag.id,
     label: tag.name,
   }));
-  console.log("itemTAg", itemTag);
   const tagOptions = tags.map((tag: any) => ({
     value: tag.id,
     label: tag.name,
   }));
 
   return (
-    <div>
+    <Card className="p-6">
       <form
         action={editItem}
-        className="w-full grid grid-cols-2 gap-2 mb-2"
+        className="w-[350px] grid grid-cols-1 gap-2 mb-2"
         id="myForm"
       >
         <Input name="collectionId" type="hidden" value={collection.id} />
@@ -51,6 +50,23 @@ export default function EditItemForm({ item, tags }: any) {
 
         <CreatableSelect
           isMulti
+          classNames={{
+            control: () =>
+              "border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500",
+            input: () => "text-gray-800 dark:text-gray-200",
+            option: ({ isFocused, isSelected }) =>
+              `${isFocused ? "bg-gray-100 dark:bg-gray-700" : "bg-white dark:bg-gray-800"} ${
+                isSelected
+                  ? "bg-blue-500 text-white"
+                  : "text-gray-800 dark:text-gray-200"
+              }`,
+            menu: () =>
+              "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700",
+            multiValue: () => "bg-blue-100 dark:bg-blue-800",
+            multiValueLabel: () => "text-blue-800 dark:text-blue-200",
+            multiValueRemove: () =>
+              "text-blue-800 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-700",
+          }}
           defaultValue={itemTag}
           name="tags"
           options={tagOptions}
@@ -111,13 +127,13 @@ export default function EditItemForm({ item, tags }: any) {
           })
         )}
       </form>
-      <button
+      <Button
         className="px-4 py-2 bg-green-500 text-white rounded"
-        form="myForm"
         type="submit"
+        onPress={onClose}
       >
-        Save Item
-      </button>
-    </div>
+        Edit Item
+      </Button>
+    </Card>
   );
 }
