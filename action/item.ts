@@ -195,7 +195,7 @@ export async function likeItem(itemId: string) {
   const session = await getSession();
 
   if (!session) {
-    throw new Error("Unauthorized");
+    redirect("/login");
   }
   const userId = session.user.id;
 

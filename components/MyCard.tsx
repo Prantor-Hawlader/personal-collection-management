@@ -13,6 +13,8 @@ import {
 } from "@/lib/customField";
 
 import { NeonGradientCard } from "./magicui/neon-gradient-card";
+import Link from "next/link";
+import { Tag } from "@prisma/client";
 
 const MyCard = ({
   item,
@@ -68,8 +70,21 @@ const MyCard = ({
           />
         </div>
         <MagicCard className="h-full w-full p-5">
-          <b className="">Name: {item.name}</b>
-          {/* <p className="">Tags: {item.tags.name}</p> */}
+          <p className="font-serif text-xl">
+            Name: <span className="text-mono">{item.name}</span>
+          </p>
+          <p className="font-serif">
+            {" "}
+            Tags :
+            {item.tags.map((tag: Tag, index: number) => (
+              <span key={tag.id}>
+                <Link className="text-blue-500" href={`/tag/${tag.id}`}>
+                  {tag.name}
+                </Link>
+                {index < tag.name.length - 1 && " "}
+              </span>
+            ))}{" "}
+          </p>
           {customFields.map(({ type, fields }) =>
             fields.map((field, index) => {
               if (field) {
@@ -79,15 +94,19 @@ const MyCard = ({
 
                 return (
                   <div key={`${type}_${index}`}>
-                    <p>
+                    <p className="font-serif text-xl">
                       {fieldLabel}:{" "}
                       {type === "Boolean" && (fieldValue ? "Yes" : "No")}
-                      {type === "Date" &&
-                        new Date(fieldValue).toLocaleDateString()}
+                      {type === "Date" && (
+                        <span className="font-mono">
+                          {new Date(fieldValue).toLocaleDateString()}
+                        </span>
+                      )}
                       {(type === "String" ||
                         type === "Text" ||
-                        type === "Integer") &&
-                        fieldValue}
+                        type === "Integer") && (
+                        <span className="font-mono">{fieldValue}</span>
+                      )}
                     </p>
                   </div>
                 );

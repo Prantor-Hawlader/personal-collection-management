@@ -26,7 +26,13 @@ import { columns, statusOptions } from "@/lib/data";
 import { VerticalDotsIcon } from "@/components/icons/VerticalDotsIcon";
 import { SearchIcon } from "@/components/icons";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
-import { blockUser, deleteUser, unblockUser } from "@/action/user";
+import {
+  blockUser,
+  deleteUser,
+  makeAdmin,
+  makeNonAdmin,
+  unblockUser,
+} from "@/action/user";
 
 type UsersProps = {
   users: Users[];
@@ -123,7 +129,14 @@ export default function AdminTable({ users }: UsersProps) {
       case "role":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{user.role}</p>
+            <Chip
+              className="capitalize"
+              color={user.role === "admin" ? "warning" : "secondary"}
+              size="sm"
+              variant="flat"
+            >
+              {user.role}
+            </Chip>
           </div>
         );
       case "status":
@@ -148,6 +161,15 @@ export default function AdminTable({ users }: UsersProps) {
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem>View</DropdownItem>
+                {user.role === "user" ? (
+                  <DropdownItem onClick={() => makeAdmin(user.id)}>
+                    Make admin
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem onClick={() => makeNonAdmin(user.id)}>
+                    Make user
+                  </DropdownItem>
+                )}
                 {user.status === "active" ? (
                   <DropdownItem onClick={() => blockUser(user.id)}>
                     Block

@@ -1,25 +1,21 @@
 import dynamic from "next/dynamic";
 
 import prisma from "@/db/prisma";
-import AddNewItem from "@/components/AddNewItem";
 
-const ItemTable = dynamic(async () => await import("@/components/ItemTable"), {
-  ssr: false,
-});
-const collection = async ({ params }: { params: { collectionId: string } }) => {
+const PublicItemTable = dynamic(
+  async () => await import("@/components/PublicItemTable"),
+  {
+    ssr: false,
+  }
+);
+const Items = async ({ params }: { params: { collectionId: string } }) => {
   const { collectionId } = params;
   const items = await prisma.item.findMany({
     where: { collectionId },
     include: { tags: true },
   });
   console.log("individual collection page rendered");
-  const tags = await prisma.tag.findMany({
-    where: {
-      name: {
-        in: ["Adventure", "Mysterious"],
-      },
-    },
-  });
+
   const collection = await prisma.collection.findUnique({
     where: { id: collectionId },
     include: {
@@ -47,10 +43,9 @@ const collection = async ({ params }: { params: { collectionId: string } }) => {
 
   return (
     <div className="w-full h-full">
-      <AddNewItem collection={collection} tags={tags} />
-      <ItemTable collection={collection} item={items} />
+      <PublicItemTable collection={collection} item={items} />
     </div>
   );
 };
 
-export default collection;
+export default Items;

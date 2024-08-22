@@ -11,48 +11,20 @@ export const siteConfig = {
       href: "/",
     },
     {
+      label: "Collections",
+      href: "/collections",
+    },
+    {
       label: "My collection",
       href: "/mycollection",
+      shouldShow: (session: Session) =>
+        session?.user?.role === "user" || session?.user?.role === "admin",
     },
 
     {
       label: "Admin",
       href: "/admin",
       shouldShow: (session: Session) => session?.user?.role === "admin",
-    },
-  ],
-  navMenuItems: [
-    {
-      label: "Profile",
-      href: "/profile",
-    },
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-    },
-    {
-      label: "Projects",
-      href: "/projects",
-    },
-    {
-      label: "Team",
-      href: "/team",
-    },
-    {
-      label: "Calendar",
-      href: "/calendar",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback",
-    },
-    {
-      label: "Logout",
-      href: "/logout",
     },
   ],
 };

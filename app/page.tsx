@@ -5,7 +5,10 @@ import RecentItem from "@/components/RecentItem";
 import TagCloud from "@/components/TagCloud";
 import TopCollection from "@/components/TopCollection";
 import prisma from "@/db/prisma";
+import { getSession } from "@/lib/session";
 export default async function Home() {
+  const session = await getSession();
+  const userName = session?.user.name;
   const recentItems = await prisma.item.findMany({
     orderBy: {
       createdAt: "desc",
@@ -35,33 +38,35 @@ export default async function Home() {
 
   return (
     //   <section className="flex flex-col justify-start gap-4 py-8 md:py-10">
-    //     <div className="inline-block max-w-lg justify-start">
-    <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div className="mt-2">
-        <h1 className={title()}>Recently added&nbsp;</h1>
-        <h1 className={title({ color: "cyan" })}>items&nbsp;</h1>
-        <Divider />
-        <RecentItem recentItems={recentItems} />
-      </div>
-
-      <div className="mt-2">
-        <h1 className={title()}>Top 5 largest&nbsp;</h1>
-        <h1 className={title({ color: "cyan" })}>collections&nbsp;</h1>
-        <Divider />
-        <TopCollection largestCollections={largestCollections} />
-      </div>
-
-      <div className="mt-2">
-        <h1 className={title()}>Tags&nbsp;</h1>
-        <h1 className={title({ color: "cyan" })}>cloud&nbsp;</h1>
-        <Divider />
-        <TagCloud tags={tags} />
-      </div>
-
-      <h2 className={subtitle({ class: "mt-4" })}>
-        Beautiful Personal Collection Management Application
+    <div>
+      <h2 className={subtitle({ class: "text-center" })}>
+        Welcome,{" "}
+        <span className="text-cyan-300 font-mono">
+          {session ? userName : "Guest"}
+        </span>
       </h2>
-      {/* </div> */}
-    </section>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="mt-2">
+          <h1 className={title()}>Recently added&nbsp;</h1>
+          <h1 className={title({ color: "cyan" })}>items&nbsp;</h1>
+          <Divider />
+          <RecentItem recentItems={recentItems} />
+        </div>
+
+        <div className="mt-2  mx-auto">
+          <h1 className={title()}>Top 5 largest&nbsp;</h1>
+          <h1 className={title({ color: "cyan" })}>collections&nbsp;</h1>
+          <Divider />
+          <TopCollection largestCollections={largestCollections} />
+        </div>
+
+        <div className="mt-2">
+          <h1 className={title()}>Tags&nbsp;</h1>
+          <h1 className={title({ color: "cyan" })}>cloud&nbsp;</h1>
+          <Divider />
+          <TagCloud tags={tags} />
+        </div>
+      </div>
+    </div>
   );
 }

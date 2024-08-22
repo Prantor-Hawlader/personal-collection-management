@@ -20,16 +20,13 @@ import { Item, Tag } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 
-import { deleteItem } from "@/action/item";
-
 import { ChevronDownIcon } from "./icons/ChevronDownIcon";
 import { SearchIcon } from "./icons/SearchIcon";
-import { VerticalDotsIcon } from "./icons/VerticalDotsIcon";
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "tags", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "tags"];
 
-export default function ItemTable({ collection, item }: any) {
-  console.log("item table rendered");
+export default function PublicItemTable({ collection, item }: any) {
+  console.log("public item table rendered");
   const generateHeaderColumns = () => {
     const baseColumns = [
       { key: "name", label: "NAME", sortable: true },
@@ -99,7 +96,6 @@ export default function ItemTable({ collection, item }: any) {
       ...customTextColumns,
       ...customBooleanColumns,
       ...customDateColumns,
-      { key: "actions", label: "ACTIONS" },
     ];
   };
   const columns = generateHeaderColumns();
@@ -174,50 +170,25 @@ export default function ItemTable({ collection, item }: any) {
     if (columnKey === "tags") {
       console.log("Tags cellValue:", cellValue);
 
-      console.log("ami");
-
       return cellValue.map((tag: Tag, index: number) => (
+        // <Link key={tag.id} href={`/tag/${tag.id}`}>
         <span key={tag.id}>
           <Link className="text-blue-500" href={`/tag/${tag.id}`}>
             {tag.name}
           </Link>
-          {index < cellValue.length - 1 && " "}
+          {index < cellValue.length - 1 && ", "}
         </span>
       ));
     }
 
     switch (columnKey) {
       case "name":
-        return <p className="text-default-500">{cellValue}</p>;
-
-      case "actions":
         return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Dropdown className="bg-background border-1 border-default-200">
-              <DropdownTrigger>
-                <Button isIconOnly radius="full" size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-400" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem>
-                  <Link href={`/item/${item.id}`}>View</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href={`/editItem/${item.id}`}>Edit</Link>
-                </DropdownItem>
-
-                <DropdownItem
-                  onClick={() => {
-                    deleteItem(item.id, collection.id);
-                  }}
-                >
-                  Delete
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
+          <Link className="text-blue-600 font-bold" href={`/item/${item.id}`}>
+            {cellValue}
+          </Link>
         );
+
       default:
         return cellValue;
     }
@@ -376,7 +347,7 @@ export default function ItemTable({ collection, item }: any) {
           {(column) => (
             <TableColumn
               key={column.key}
-              align={column.key === "actions" ? "center" : "start"}
+              align={"start"}
               allowsSorting={column.sortable}
             >
               {column.label}

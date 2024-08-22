@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 
 import { signIn } from "@/auth";
 import prisma from "@/db/prisma";
+import { getSession } from "@/lib/session";
 
 const login = async (formData: FormData) => {
   const email = formData.get("email") as string;
@@ -105,5 +106,44 @@ async function unblockUser(userId: string) {
     revalidatePath("/admin");
   }
 }
+async function makeAdmin(userId: string) {
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { role: "admin" },
+    });
+  } catch (error) {
+    console.log("Error making admin user", error);
+  } finally {
+    revalidatePath("/admin");
+  }
+}
+async function makeNonAdmin(userId: string) {
+  const session = await getSession();
+  const adminId = session?.user.id;
 
-export { register, login, fetchAllUsers, deleteUser, blockUser, unblockUser };
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { role: "user" },
+    });
+  } catch (error) {
+    console.log("Error making non-admin user", error);
+  } finally {
+    revalidatePath("/admin");
+    if (adminId === userId) {
+      return redirect("/login");
+    }
+  }
+}
+
+export {
+  register,
+  login,
+  fetchAllUsers,
+  deleteUser,
+  blockUser,
+  unblockUser,
+  makeAdmin,
+  makeNonAdmin,
+};
