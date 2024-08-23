@@ -1,19 +1,15 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies as nextCookies } from "next/headers";
 
 import { Locale, defaultLocale } from "@/config";
 
-export async function getUserLocale() {
-  const COOKIE_NAME = "NEXT_LOCALE";
-  const cookieStore = cookies();
+const COOKIE_NAME = "NEXT_LOCALE";
 
-  return cookieStore.get(COOKIE_NAME)?.value || defaultLocale;
+export async function getUserLocale(cookies = nextCookies()) {
+  return cookies.get(COOKIE_NAME)?.value || defaultLocale;
 }
 
-export async function setUserLocale(locale: Locale) {
-  const COOKIE_NAME = "NEXT_LOCALE";
-  const cookieStore = cookies();
-
-  cookieStore.set(COOKIE_NAME, locale);
+export async function setUserLocale(locale: Locale, cookies = nextCookies()) {
+  cookies.set(COOKIE_NAME, locale);
 }
