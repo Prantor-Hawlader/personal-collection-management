@@ -15,8 +15,8 @@ export default function LanguageSwitcher() {
           label: t("en"),
         },
         {
-          value: "es",
-          label: t("es"),
+          value: "de",
+          label: t("de"),
         },
       ]}
       label={t("label")}

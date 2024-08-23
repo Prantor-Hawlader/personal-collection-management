@@ -11,6 +11,7 @@ import {
 import { link as linkStyles } from "@nextui-org/theme";
 import clsx from "clsx";
 import NextLink from "next/link";
+import { useTranslations } from "next-intl";
 
 import { signOut } from "@/auth";
 import { Logo } from "@/components/icons";
@@ -22,7 +23,7 @@ import SearchBar from "./SearchBar";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 export const Navbar = ({ session }: any) => {
-  console.log("session", session);
+  const t = useTranslations("Button");
 
   return (
     <NextUINavbar isBordered maxWidth="xl" position="sticky">
@@ -55,13 +56,10 @@ export const Navbar = ({ session }: any) => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        {/* <LanguageSwitcher /> */}
         <NavbarItem className="hidden sm:flex gap-2">
           {!session ? (
             <NextLink href="/login">
-              <MyButton>
-                <p className="font-bold text-md">Login</p>
-              </MyButton>
+              <MyButton>{t("login")}</MyButton>
             </NextLink>
           ) : (
             <form
@@ -70,12 +68,10 @@ export const Navbar = ({ session }: any) => {
                 await signOut();
               }}
             >
-              <MyButton>
-                <p className="font-bold text-md">Logout</p>
-              </MyButton>
+              <MyButton>{t("logout")}</MyButton>
             </form>
           )}
-          {/* <LanguageSwitcher /> */}
+          <LanguageSwitcher />
 
           <SearchBar />
 
@@ -85,8 +81,9 @@ export const Navbar = ({ session }: any) => {
         <NavbarItem className="hidden lg:flex" />
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        {/* <LanguageSwitcher /> */}
+      <NavbarContent className="sm:hidden basis-1" justify="end">
+        <LanguageSwitcher />
+
         <SearchBar />
         <ThemeSwitch />
         <NavbarMenuToggle />
@@ -111,6 +108,22 @@ export const Navbar = ({ session }: any) => {
               </Link>
             </NavbarMenuItem>
           ))}
+          <NavbarMenuItem className="w-1/5">
+            {!session ? (
+              <NextLink href="/login">
+                <MyButton>{t("login")} </MyButton>
+              </NextLink>
+            ) : (
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut();
+                }}
+              >
+                <MyButton>{t("logout")}</MyButton>
+              </form>
+            )}
+          </NavbarMenuItem>
         </div>
       </NavbarMenu>
     </NextUINavbar>

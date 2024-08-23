@@ -113,8 +113,6 @@ export default function AdminTable({ users }: UsersProps) {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback((user: Users, columnKey: React.Key) => {
-    console.log(user);
-
     switch (columnKey) {
       case "name":
         return (
@@ -160,7 +158,6 @@ export default function AdminTable({ users }: UsersProps) {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
                 {user.role === "user" ? (
                   <DropdownItem onClick={() => makeAdmin(user.id)}>
                     Make admin
@@ -352,7 +349,7 @@ export default function AdminTable({ users }: UsersProps) {
   }, [items.length, page, pages, hasSearchFilter]);
 
   return (
-    <div>
+    <div className="mt-3">
       <Table
         isHeaderSticky
         removeWrapper

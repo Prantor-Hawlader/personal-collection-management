@@ -1,28 +1,22 @@
 {
-  "AppLayout": {
-    "name":"Prantor Hawlader",
-    "home": "Start",
-    "logout": "Abmelden",
-    "profile": "Profil"
+ "NavMenu": {
+    "root":"Heim",
+    "cl": "Sammlungen",
+    "mcl": "Meine Sammlung",
+    "author": "Verwaltung"
   },
   "HomePage": {
-    "title": "Start"
+    "greet": "Willkommen"
   },
   "LocaleSwitcher": {
     "de": "Deutsch",
     "en": "English",
     "label": "Sprache"
   },
-  "LoginPage": {
-    "credentials": "Anmeldedaten: jane@doe.com / next-intl",
-    "description": "Bitte geben Sie Ihre Daten ein.",
-    "email": "Email",
-    "invalidCredentials": "Bitte überprüfen Sie Ihre Anmeldedaten.",
-    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
-    "invalidPassword": "Bitte geben Sie ein Passwort ein.",
-    "login": "Anmelden",
-    "password": "Passwort",
-    "title": "Willkommen zurück"
+  "Button": {
+   
+    "login": "Einloggen",
+    "logout": "Ausloggen"
   },
   "ProfilePage": {
     "title": "Profil"

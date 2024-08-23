@@ -7,7 +7,7 @@ const MyButton = ({ children }: { children: ReactNode }) => {
       className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]"
       type="submit"
     >
-      {children}
+      <p className=" font-bold text-md">{children}</p>
     </Button>
   );
 };

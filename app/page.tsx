@@ -1,4 +1,5 @@
 import { Divider } from "@nextui-org/react";
+import { getTranslations } from "next-intl/server";
 
 import { subtitle, title } from "@/components/primitives";
 import RecentItem from "@/components/RecentItem";
@@ -7,6 +8,8 @@ import TopCollection from "@/components/TopCollection";
 import prisma from "@/db/prisma";
 import { getSession } from "@/lib/session";
 export default async function Home() {
+  const t = await getTranslations("HomePage");
+
   const session = await getSession();
   const userName = session?.user.name;
   const recentItems = await prisma.item.findMany({
@@ -38,7 +41,7 @@ export default async function Home() {
   return (
     <div>
       <h2 className={subtitle({ class: "text-center" })}>
-        Welcome,
+        {t("greet")},{" "}
         <span className="text-cyan-300 font-mono">
           {session ? userName : "Guest"}
         </span>

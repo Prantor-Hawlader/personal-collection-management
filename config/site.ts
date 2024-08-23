@@ -1,4 +1,11 @@
 import { Session } from "next-auth";
+import { getTranslations } from "next-intl/server";
+
+const NavMenu = async (menu: string) => {
+  const t = await getTranslations("NavMenu");
+
+  return t(menu);
+};
 
 export type SiteConfig = typeof siteConfig;
 
@@ -7,22 +14,22 @@ export const siteConfig = {
   description: "Store everything you collect.",
   navItems: [
     {
-      label: "Home",
+      label: NavMenu("root"),
       href: "/",
     },
     {
-      label: "Collections",
+      label: NavMenu("cl"),
       href: "/collections",
     },
     {
-      label: "My collection",
+      label: NavMenu("mcl"),
       href: "/mycollection",
       shouldShow: (session: Session) =>
         session?.user?.role === "user" || session?.user?.role === "admin",
     },
 
     {
-      label: "Admin",
+      label: NavMenu("author"),
       href: "/admin",
       shouldShow: (session: Session) => session?.user?.role === "admin",
     },
