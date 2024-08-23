@@ -66,7 +66,12 @@ export default function CollectionTable({
       case "name":
         return (
           <User
-            avatarProps={{ radius: "lg", src: collection.image || undefined }}
+            avatarProps={{
+              radius: "lg",
+              src:
+                collection.image ||
+                "https://images.pexels.com/photos/248993/pexels-photo-248993.jpeg",
+            }}
             name={cellValue}
           >
             <Link href={`/mycollection/${collection.id}`}>

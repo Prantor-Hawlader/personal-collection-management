@@ -19,6 +19,7 @@ import { siteConfig } from "@/config/site";
 
 import MyButton from "./MyButton";
 import SearchBar from "./SearchBar";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export const Navbar = ({ session }: any) => {
   console.log("session", session);
@@ -54,6 +55,7 @@ export const Navbar = ({ session }: any) => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
+        {/* <LanguageSwitcher /> */}
         <NavbarItem className="hidden sm:flex gap-2">
           {!session ? (
             <NextLink href="/login">
@@ -73,6 +75,8 @@ export const Navbar = ({ session }: any) => {
               </MyButton>
             </form>
           )}
+          {/* <LanguageSwitcher /> */}
+
           <SearchBar />
 
           <ThemeSwitch />
@@ -82,6 +86,7 @@ export const Navbar = ({ session }: any) => {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+        {/* <LanguageSwitcher /> */}
         <SearchBar />
         <ThemeSwitch />
         <NavbarMenuToggle />
@@ -99,7 +104,7 @@ export const Navbar = ({ session }: any) => {
                       ? "danger"
                       : "foreground"
                 }
-                href="#"
+                href={item.href}
                 size="lg"
               >
                 {(!item.shouldShow || item.shouldShow(session)) && item.label}

@@ -2,6 +2,8 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 
 import { getSession } from "@/lib/session";
 import { siteConfig } from "@/config/site";
@@ -34,9 +36,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
+  // const messages = await getMessages();
+  // const locale = await getLocale();
 
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang={"en"}>
       <head />
       <body
         className={clsx(
@@ -44,6 +48,7 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
+        {/* <NextIntlClientProvider messages={messages}> */}
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar session={session} />
@@ -59,6 +64,7 @@ export default async function RootLayout({
             </footer>
           </div>
         </Providers>
+        {/* </NextIntlClientProvider> */}
       </body>
     </html>
   );

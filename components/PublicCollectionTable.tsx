@@ -9,6 +9,9 @@ import {
   TableCell,
   User,
 } from "@nextui-org/react";
+
+import defaultCollectionPic from "@/public/softwareGroup.jpeg";
+
 import { Category, Collection } from "@prisma/client";
 import Link from "next/link";
 
@@ -41,7 +44,12 @@ export default function PublicCollectionTable({
       case "name":
         return (
           <User
-            avatarProps={{ radius: "lg", src: collection.image || undefined }}
+            avatarProps={{
+              radius: "lg",
+              src:
+                collection.image ||
+                "https://images.pexels.com/photos/248993/pexels-photo-248993.jpeg",
+            }}
             name={
               <Link href={`/collections/${collection.id}`}>
                 {collection.name}

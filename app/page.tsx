@@ -38,7 +38,7 @@ export default async function Home() {
   return (
     <div>
       <h2 className={subtitle({ class: "text-center" })}>
-        Welcome,{" "}
+        Welcome,
         <span className="text-cyan-300 font-mono">
           {session ? userName : "Guest"}
         </span>
@@ -51,7 +51,7 @@ export default async function Home() {
           <RecentItem recentItems={recentItems} />
         </div>
 
-        <div className="mt-2  mx-auto">
+        <div className="mt-2">
           <h1 className={title()}>Top 5 largest&nbsp;</h1>
           <h1 className={title({ color: "cyan" })}>collections&nbsp;</h1>
           <Divider />

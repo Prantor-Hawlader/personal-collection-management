@@ -2,7 +2,10 @@
 import { Tag } from "@prisma/client";
 import Link from "next/link";
 
-const TagCloud = ({ tags }: any) => {
+type TagsProps = {
+  tags: Tag[];
+};
+const TagCloud = ({ tags }: TagsProps) => {
   return (
     <div className="flex justify-start flex-wrap gap-2 max-w-sm my-4 text-sm">
       {tags.map((tag: any) => (

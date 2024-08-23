@@ -1,8 +1,9 @@
 "use client";
-import { AiOutlineLike } from "react-icons/ai";
 import Image from "next/image";
 import { AiFillLike } from "react-icons/ai";
 import React from "react";
+import Link from "next/link";
+import { Tag } from "@prisma/client";
 
 import pic from "@/public/softwareGroup.jpeg";
 import { likeItem } from "@/action/item";
@@ -13,40 +14,16 @@ import {
 } from "@/lib/customField";
 
 import { NeonGradientCard } from "./magicui/neon-gradient-card";
-import Link from "next/link";
-import { Tag } from "@prisma/client";
 
 const MyCard = ({
   item,
-  session,
+
   collection,
 }: {
   item: any;
   session: any;
   collection: any;
 }) => {
-  // const alreadyLike = item.likesList;
-  // const [isLiked, setIsLiked] = React.useState(alreadyLike === 1);
-  // const [likeCount, setLikeCount] = React.useState(item.likes);
-
-  // const handleLike = async () => {
-  //   if (!session) return;
-
-  //   // Optimistic update
-
-  //   try {
-  //     setIsLiked(!isLiked);
-  //     setLikeCount((prevCount: number) =>
-  //       isLiked ? prevCount - 1 : prevCount + 1
-  //     );
-  //     // Perform the actual like action
-  //     await likeItem(item.id);
-  //   } catch (error) {
-  //     // If there's an error, revert the optimistic update
-  //     console.error("Error liking item:", error);
-  //   }
-  // };
-
   function mapCollectionToCustomFields(collection: any) {
     return customFieldDefinitions.map((def: CustomFieldDefinition) => ({
       type: def.type,
@@ -118,13 +95,6 @@ const MyCard = ({
         </MagicCard>
       </div>
       <div className="flex gap-1 items-center mb-2">
-        {/* {isLiked ? (
-          <AiOutlineLike
-            className="cursor-pointer"
-            size={25}
-            onClick={handleLike}
-          />
-        ) : ( */}
         <AiFillLike
           className="cursor-pointer"
           size={25}

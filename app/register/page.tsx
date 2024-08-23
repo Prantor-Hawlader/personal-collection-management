@@ -53,7 +53,7 @@ export default function Register() {
               className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]"
               type="submit"
             >
-              Login
+              Register
             </Button>
           </CardFooter>
         </form>

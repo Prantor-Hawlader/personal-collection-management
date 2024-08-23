@@ -9,11 +9,11 @@ const TagItem = async ({ params }: { params: { tagId: string } }) => {
   });
 
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="text-xl font-extralight text-cyan-300">
+    <div className="flex flex-col justify-center items-center h-full">
+      <div className="text-2xl font-bold text-cyan-300">
         Items of {tags?.name} tag:
-        <TagCard tags={tags!} />
       </div>
+      <TagCard tags={tags!} />
     </div>
   );
 };
