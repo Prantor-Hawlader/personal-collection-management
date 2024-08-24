@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { useTransition } from "react";
 
 import { Locale } from "@/config";
-import { setUserLocale } from "@/services/locale";
+import { setUserLocale } from "@/app/services/locale";
 
 type Props = {
   defaultValue: string;
