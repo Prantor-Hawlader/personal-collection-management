@@ -1,8 +1,6 @@
-"use server";
-import { cookies } from "next/headers";
-
+import Cookies from "js-cookie";
 import { Locale } from "@/config";
 
 export async function setUserLocale(locale: Locale) {
-  cookies().set("INTL_COOKIE", locale);
+  Cookies.set("INTL_COOKIE", locale);
 }
