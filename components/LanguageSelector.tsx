@@ -21,17 +21,18 @@ export default function LanguageSelector({
 }: Props) {
   const [isPending, startTransition] = useTransition();
 
-  function onChange(value: string) {
-    const locale = value as Locale;
-
-    startTransition(() => {
-      setUserLocale(locale);
+  const handleLocaleChange = (newLocale: Locale) => {
+    startTransition(async () => {
+      await setUserLocale(newLocale);
     });
-  }
+  };
 
   return (
     <div className="relative">
-      <Select.Root defaultValue={defaultValue} onValueChange={onChange}>
+      <Select.Root
+        defaultValue={defaultValue}
+        onValueChange={handleLocaleChange}
+      >
         <Select.Trigger
           aria-label={label}
           className={clsx(
