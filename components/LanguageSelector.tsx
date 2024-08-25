@@ -7,7 +7,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import { Locale } from "@/config";
-import { setUserLocale } from "@/app/services/locale";
+import { setUserLocale } from "@/services/locale";
 
 type Props = {
   defaultValue: string;
