@@ -23,22 +23,18 @@ export default function LanguageSelector({
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const handleLocaleChange = (newLocale: Locale) => {
-    startTransition(async () => {
-      await setUserLocale(newLocale);
+  function onChange(value: string) {
+    const locale = value as Locale;
 
-      document.cookie = `NEXT_LOCALE=${newLocale}`;
-
+    startTransition(() => {
+      setUserLocale(locale);
       router.refresh();
     });
-  };
+  }
 
   return (
     <div className="relative">
-      <Select.Root
-        defaultValue={defaultValue}
-        onValueChange={handleLocaleChange}
-      >
+      <Select.Root defaultValue={defaultValue} onValueChange={onChange}>
         <Select.Trigger
           aria-label={label}
           className={clsx(

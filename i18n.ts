@@ -3,10 +3,10 @@ import { getRequestConfig } from "next-intl/server";
 import { getUserLocale } from "./app/services/locale";
 
 export default getRequestConfig(async () => {
-  const locale = await getUserLocale();
+  const userLocale = await getUserLocale();
 
   return {
-    locale,
-    messages: (await import(`./messages/${locale}.json`)).default,
+    locale: userLocale,
+    messages: (await import(`./messages/${userLocale}.json`)).default,
   };
 });

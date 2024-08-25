@@ -1,27 +1,17 @@
 "use server";
-
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
+import { setCookie, getCookie } from "cookies-next";
 
 import { Locale, defaultLocale } from "@/config";
-
 const COOKIE_NAME = "NEXT_LOCALE";
 
-export async function getUserLocale(): Promise<Locale> {
-  const headersList = headers();
-  const cookies = headersList.get("cookie") || "";
-  const localeCookie = cookies
-    .split(";")
-    .find((c) => c.trim().startsWith(`${COOKIE_NAME}=`));
+export async function getUserLocale() {
+  const cookieValue = getCookie(COOKIE_NAME, { cookies });
+  const result = (cookieValue as Locale) || defaultLocale;
 
-  if (localeCookie) {
-    const locale = localeCookie.split("=")[1].trim() as Locale;
-
-    return locale;
-  }
-
-  return defaultLocale;
+  return result;
 }
 
-export async function setUserLocale(locale: Locale): Promise<Locale> {
-  return locale;
+export async function setUserLocale(locale: Locale) {
+  setCookie(COOKIE_NAME, locale, { cookies });
 }
