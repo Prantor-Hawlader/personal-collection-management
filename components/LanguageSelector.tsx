@@ -4,6 +4,7 @@ import { CheckIcon, LanguageIcon } from "@heroicons/react/24/solid";
 import * as Select from "@radix-ui/react-select";
 import clsx from "clsx";
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 import { Locale } from "@/config";
 import { setUserLocale } from "@/app/services/locale";
@@ -20,10 +21,15 @@ export default function LanguageSelector({
   label,
 }: Props) {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const handleLocaleChange = (newLocale: Locale) => {
     startTransition(async () => {
       await setUserLocale(newLocale);
+
+      document.cookie = `NEXT_LOCALE=${newLocale}`;
+
+      router.refresh();
     });
   };
 
