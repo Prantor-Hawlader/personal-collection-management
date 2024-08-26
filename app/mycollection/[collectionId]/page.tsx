@@ -12,7 +12,6 @@ const collection = async ({ params }: { params: { collectionId: string } }) => {
     where: { collectionId },
     include: { tags: true },
   });
-  console.log("individual collection page rendered");
   const tags = await prisma.tag.findMany({
     where: {
       name: {

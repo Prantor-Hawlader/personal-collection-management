@@ -29,7 +29,6 @@ import { VerticalDotsIcon } from "./icons/VerticalDotsIcon";
 const INITIAL_VISIBLE_COLUMNS = ["name", "tags", "actions"];
 
 export default function ItemTable({ collection, item }: any) {
-  console.log("item table rendered");
   const generateHeaderColumns = () => {
     const baseColumns = [
       { key: "name", label: "NAME", sortable: true },
@@ -159,10 +158,8 @@ export default function ItemTable({ collection, item }: any) {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback((item: any, columnKey: string) => {
-    // if (cellValue === null || cellValue === undefined) return "";
     const cellValue = item[columnKey];
 
-    console.log("columnKey,", columnKey);
     if (columnKey.startsWith("customBoolean")) {
       return cellValue ? "Yes" : "No";
     }
@@ -172,10 +169,6 @@ export default function ItemTable({ collection, item }: any) {
     }
 
     if (columnKey === "tags") {
-      console.log("Tags cellValue:", cellValue);
-
-      console.log("ami");
-
       return cellValue.map((tag: Tag, index: number) => (
         <span key={tag.id}>
           <Link className="text-blue-500" href={`/tag/${tag.id}`}>
@@ -338,13 +331,11 @@ export default function ItemTable({ collection, item }: any) {
       wrapper: ["max-h-[382px]", "max-w-3xl"],
       th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
-        // changing the rows border radius
-        // first
         "group-data-[first=true]:first:before:rounded-none",
         "group-data-[first=true]:last:before:rounded-none",
-        // middle
+
         "group-data-[middle=true]:before:rounded-none",
-        // last
+
         "group-data-[last=true]:first:before:rounded-none",
         "group-data-[last=true]:last:before:rounded-none",
       ],

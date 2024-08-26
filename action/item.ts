@@ -14,8 +14,6 @@ export async function createItem(formData: FormData) {
   const name = formData.get("name") as string;
   const tagsValue = formData.getAll("tags");
 
-  console.log("tagsvalue", tagsValue);
-
   const existingTagIds: string[] = [];
   const newTagNames: string[] = [];
 
@@ -68,9 +66,10 @@ export async function createItem(formData: FormData) {
 
   try {
     await prisma.item.create({ data: itemData });
+
+    return { status: "success" };
   } catch (error) {
-    console.error("Error creating item:", error);
-    throw new Error("Failed to create item");
+    return { error: "Failed to create item" };
   } finally {
     revalidatePath(`/mycollection/${collectionId}`);
   }
@@ -83,8 +82,6 @@ export async function editItem(formData: FormData) {
   const itemId = formData.get("itemId") as string;
   const name = formData.get("name") as string;
   const tagsValue = formData.getAll("tags");
-
-  console.log("tagsvalue", tagsValue);
 
   const existingTagIds: string[] = [];
   const newTagNames: string[] = [];
@@ -140,11 +137,11 @@ export async function editItem(formData: FormData) {
       where: { id: itemId },
       data: NewitemData,
     });
+
+    return { status: "success" };
   } catch (error) {
-    console.error("Error editing item:", error);
-    throw new Error("Failed to edit item");
+    return { error: "Failed to edit item" };
   } finally {
-    revalidatePath(`/mycollection/${collectionId}`);
     redirect(`/mycollection/${collectionId}`);
   }
 }
@@ -180,13 +177,10 @@ export async function deleteItem(itemId: string, collectionId: string) {
       }
     }
 
-    console.log(
-      `Item with id ${itemId} and associated orphaned tags deleted successfully.`
-    );
+    return { success: true };
   } catch (error) {
-    throw new Error("Failed to delete item");
+    return { error: "Failed to delete item" };
   } finally {
-    console.log("itemId and cid", itemId, collectionId);
     revalidatePath(`/mycollection/${collectionId}`);
   }
 }
@@ -199,33 +193,37 @@ export async function likeItem(itemId: string) {
   }
   const userId = session.user.id;
 
-  const post = await prisma.item.findUnique({
-    where: { id: itemId },
-    select: {
-      likes: true,
-      likesList: { where: { userId } },
-    },
-  });
+  try {
+    const post = await prisma.item.findUnique({
+      where: { id: itemId },
+      select: {
+        likes: true,
+        likesList: { where: { userId } },
+      },
+    });
 
-  if (!post) throw new Error("Post not found");
+    if (!post) throw new Error("Post not found");
 
-  let newLikes: number;
+    let newLikes: number;
 
-  if (post.likesList.length > 0) {
-    newLikes = post.likes - 1;
-    await prisma.like.deleteMany({ where: { itemId, userId } });
-  } else {
-    newLikes = post.likes + 1;
-    await prisma.like.create({ data: { itemId, userId } });
+    if (post.likesList.length > 0) {
+      newLikes = post.likes - 1;
+      await prisma.like.deleteMany({ where: { itemId, userId } });
+    } else {
+      newLikes = post.likes + 1;
+      await prisma.like.create({ data: { itemId, userId } });
+    }
+    await prisma.item.update({
+      where: { id: itemId },
+      data: { likes: newLikes },
+    });
+
+    return { success: true };
+  } catch (error) {
+    return { error: error };
+  } finally {
+    revalidatePath(`/item/${itemId}`);
   }
-  await prisma.item.update({
-    where: { id: itemId },
-    data: { likes: newLikes },
-  });
-
-  revalidatePath(`/item/${itemId}`);
-
-  return { success: true };
 }
 
 export async function itemComment(formData: FormData) {
@@ -242,8 +240,10 @@ export async function itemComment(formData: FormData) {
     await prisma.comment.create({
       data: { text, userId, itemId },
     });
+
+    return { success: true };
   } catch (error) {
-    console.log(error);
+    return { error: error };
   } finally {
     revalidatePath(`/item/${itemId}`);
   }

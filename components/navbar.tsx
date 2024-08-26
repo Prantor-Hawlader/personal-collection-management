@@ -108,7 +108,7 @@ export const Navbar = ({ session }: any) => {
               </Link>
             </NavbarMenuItem>
           ))}
-          <NavbarMenuItem className="w-1/5">
+          <NavbarMenuItem className="w-1/4">
             {!session ? (
               <NextLink href="/login">
                 <MyButton>{t("login")} </MyButton>

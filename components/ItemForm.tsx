@@ -1,6 +1,7 @@
 "use client";
-import { Input, Textarea, DatePicker, Button } from "@nextui-org/react";
+import { Input, Textarea, DatePicker } from "@nextui-org/react";
 import CreatableSelect from "react-select/creatable";
+import toast from "react-hot-toast";
 
 import { createItem } from "@/action/item";
 import {
@@ -8,9 +9,9 @@ import {
   customFieldDefinitions,
 } from "@/lib/customField";
 
-export default function NewItemForm({ collection, tags, onClose }: any) {
-  console.log("item form rendered");
+import SubmitButton from "./SubmitButton";
 
+export default function NewItemForm({ collection, tags, onClose }: any) {
   function mapCollectionToCustomFields(collection: any) {
     return customFieldDefinitions.map((def: CustomFieldDefinition) => ({
       type: def.type,
@@ -24,15 +25,30 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
     label: tag.name,
   }));
 
+  const handleFormSubmit = async (formData: FormData) => {
+    const res = await createItem(formData);
+
+    if (res?.status) {
+      toast.success("Successfully created item");
+    }
+    if (res?.error) {
+      toast.error(res.error);
+    }
+  };
+
   return (
     <div>
-      <form action={createItem} className="w-full grid grid-cols-1 gap-2 mb-2">
+      <form
+        action={handleFormSubmit}
+        className="w-full grid grid-cols-1 gap-2 mb-2"
+      >
         <Input name="collectionId" type="hidden" value={collection.id} />
 
-        <Input required label="Name" name="name" size="sm" type="text" />
+        <Input isRequired label="Name" name="name" size="sm" type="text" />
 
         <CreatableSelect
           isMulti
+          required
           classNames={{
             control: () =>
               "border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500",
@@ -61,6 +77,7 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
                 <div key={`${type}_${index}`}>
                   {type === "String" && (
                     <Input
+                      isRequired
                       label={collection[`custom${type}${index + 1}Name`]}
                       name={`custom_${type}_${index + 1}`}
                       type="text"
@@ -68,6 +85,7 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
                   )}
                   {type === "Text" && (
                     <Textarea
+                      isRequired
                       className="mb-6 md:mb-0"
                       label={collection[`custom${type}${index + 1}Name`]}
                       name={`custom_${type}_${index + 1}`}
@@ -85,12 +103,14 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
                   )}
                   {type === "Date" && (
                     <DatePicker
+                      isRequired
                       label={collection[`custom${type}${index + 1}Name`]}
                       name={`custom_${type}_${index + 1}`}
                     />
                   )}
                   {type === "Integer" && (
                     <Input
+                      isRequired
                       label={collection[`custom${type}${index + 1}Name`]}
                       name={`custom_${type}_${index + 1}`}
                       type="number"
@@ -103,13 +123,9 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
             return null;
           })
         )}
-        <Button
-          className="px-4 py-2 bg-green-500 text-white rounded"
-          type="submit"
-          onPress={onClose}
-        >
+        <SubmitButton title={"Creating"} onClose={onClose}>
           Create Item
-        </Button>
+        </SubmitButton>
       </form>
     </div>
   );

@@ -1,5 +1,5 @@
 "use client";
-import { Input, Textarea, DatePicker, Button, Card } from "@nextui-org/react";
+import { Input, Textarea, DatePicker, Card } from "@nextui-org/react";
 import CreatableSelect from "react-select/creatable";
 
 import { editItem } from "@/action/item";
@@ -8,8 +8,9 @@ import {
   customFieldDefinitions,
 } from "@/lib/customField";
 
+import SubmitButton from "./SubmitButton";
+
 export default function EditItemForm({ item, tags, onClose }: any) {
-  console.log("item form rendered");
   const collection = item.collection;
 
   function mapCollectionToCustomFields(collection: any) {
@@ -126,14 +127,10 @@ export default function EditItemForm({ item, tags, onClose }: any) {
             return null;
           })
         )}
+        <SubmitButton title={"Editing"} onClose={onClose}>
+          Edit Item
+        </SubmitButton>
       </form>
-      <Button
-        className="px-4 py-2 bg-green-500 text-white rounded"
-        type="submit"
-        onPress={onClose}
-      >
-        Edit Item
-      </Button>
     </Card>
   );
 }
