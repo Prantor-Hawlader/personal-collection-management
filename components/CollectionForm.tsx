@@ -8,9 +8,10 @@ import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import { Select, SelectItem } from "@nextui-org/react";
-import { useFormStatus } from "react-dom";
+import toast from "react-hot-toast";
 
 import { createCollection } from "@/action/collection";
+
 import SubmitButton from "./SubmitButton";
 
 const customFieldTypes = [
@@ -29,6 +30,23 @@ export default function CollectionForm({
   categories,
   onClose,
 }: CollectionFormProps) {
+  const [markdownContent, setMarkdownContent] = useState("");
+  const handleFormSubmit = async (formData: FormData) => {
+    if (!markdownContent) {
+      toast.error("Description is required");
+
+      return;
+    }
+
+    const res = await createCollection(formData);
+
+    if (res?.status) {
+      toast.success("Successfully created collection");
+    }
+    if (res?.error) {
+      toast.error("Failed to create collection");
+    }
+  };
   // const clientAction = async (formData: FormData) => {
   //   const newCollection = {
   //     name: formData.get("name"),
@@ -76,18 +94,14 @@ export default function CollectionForm({
   };
 
   return (
-    <form
-      action={async (formData) => {
-        await createCollection(formData);
-      }}
-      className="w-full mx-auto mt-8"
-    >
+    <form action={handleFormSubmit} className="w-full mx-auto mt-8">
       <Input isRequired className="mb-4" label="Name" name="name" type="text" />
 
       <MdEditor
         className="mb-4"
         name="description"
         renderHTML={(text) => mdParser.render(text)}
+        onChange={({ text }) => setMarkdownContent(text)}
       />
 
       <Select
@@ -114,8 +128,8 @@ export default function CollectionForm({
             {customFields[type.name].map((_, index) => (
               <div key={index} className="flex items-center mt-2">
                 <Input
+                  label={`${type.name} field name`}
                   name={`custom${type.name}${index + 1}Name`}
-                  placeholder={`${type.name} field name`}
                   type="text"
                 />
                 <Button

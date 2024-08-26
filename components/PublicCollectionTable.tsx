@@ -10,7 +10,7 @@ import {
   User,
 } from "@nextui-org/react";
 
-import defaultCollectionPic from "@/public/softwareGroup.jpeg";
+import ReactMarkdown from "react-markdown";
 
 import { Category, Collection } from "@prisma/client";
 import Link from "next/link";
@@ -60,11 +60,7 @@ export default function PublicCollectionTable({
           </User>
         );
       case "description":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-          </div>
-        );
+        return <ReactMarkdown>{cellValue}</ReactMarkdown>;
       case "category":
         return (
           <p className="text-bold text-sm capitalize">

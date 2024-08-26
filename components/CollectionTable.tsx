@@ -19,14 +19,13 @@ import {
 } from "@nextui-org/react";
 import { Category, Collection } from "@prisma/client";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 
 import { deleteCollection } from "@/action/collection";
 
 import { EditIcon } from "./icons/EditIcon";
 import { DeleteIcon } from "./icons/DeleteIcon";
 import EditCollectionForm from "./EditCollectionForm";
-import ReactMarkdown from "react-markdown";
-
 import { EyeIcon } from "./icons/EyeIcon";
 
 const columns = [

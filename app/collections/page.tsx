@@ -16,8 +16,6 @@ const Collections = async () => {
     },
   });
 
-  console.log("public Collection page rendered", collections);
-
   return (
     <div className="w-full">
       <PublicCollectionTable collections={collections} />

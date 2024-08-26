@@ -53,10 +53,10 @@ export async function createCollection(formData: FormData) {
     await prisma.collection.create({
       data: collectionData,
     });
-    console.log("collection created");
+
+    return { status: "success" };
   } catch (error) {
-    console.log(error);
-    throw new Error("Collection creatation failed");
+    return { error };
   } finally {
     revalidatePath("/mycollection");
   }
@@ -106,10 +106,10 @@ export async function editCollection(formData: FormData) {
       where: { id: collectionId },
       data: collectionData,
     });
-    console.log("collection edited");
+
+    return { status: "success" };
   } catch (error) {
-    console.log(error);
-    throw new Error("Collection editation failed");
+    return { error };
   } finally {
     revalidatePath("/mycollection");
   }
@@ -130,8 +130,10 @@ export async function deleteCollection(collectionId: string) {
         where: { id: collectionId, userId },
       });
     }
+
+    return { status: "success" };
   } catch (error) {
-    throw new Error("Failed to delete collection");
+    return { error };
   } finally {
     revalidatePath("/mycollection");
   }

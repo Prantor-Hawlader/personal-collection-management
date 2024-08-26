@@ -14,7 +14,6 @@ const Items = async ({ params }: { params: { collectionId: string } }) => {
     where: { collectionId },
     include: { tags: true },
   });
-  console.log("individual collection page rendered");
 
   const collection = await prisma.collection.findUnique({
     where: { id: collectionId },

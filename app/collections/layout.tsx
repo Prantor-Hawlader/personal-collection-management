@@ -1,4 +1,4 @@
-export default function MyCollectionLayout({
+export default function CollectionsLayout({
   children,
 }: {
   children: React.ReactNode;
