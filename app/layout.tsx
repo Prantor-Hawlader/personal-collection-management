@@ -11,6 +11,7 @@ import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 
 import { Providers } from "./providers";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: {
@@ -55,6 +56,7 @@ export default async function RootLayout({
 
               <main className="container mx-auto max-w-7xl pt-2 px-6 flex-grow">
                 {children}
+                <Toaster position="top-right" />
               </main>
               <footer className="w-full flex items-center justify-center py-3">
                 <Link className="flex items-center gap-1 text-current" href="/">

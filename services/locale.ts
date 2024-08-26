@@ -1,6 +1,15 @@
-import Cookies from "js-cookie";
-import { Locale } from "@/config";
+"use server";
+
+import { cookies } from "next/headers";
+
+import { Locale, defaultLocale } from "@/config";
+
+const COOKIE_NAME = "NEXT_LOCALE";
+
+export async function getUserLocale() {
+  return cookies().get(COOKIE_NAME)?.value || defaultLocale;
+}
 
 export async function setUserLocale(locale: Locale) {
-  Cookies.set("INTL_COOKIE", locale);
+  cookies().set(COOKIE_NAME, locale);
 }

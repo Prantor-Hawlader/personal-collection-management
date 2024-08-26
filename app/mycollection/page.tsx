@@ -2,8 +2,8 @@ import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 
 import prisma from "@/db/prisma";
-import AddNewCollection from "@/components/AddnewCollection";
 import { getSession } from "@/lib/session";
+import AddNewCollection from "@/components/AddNewCollection";
 
 const CollectionTable = dynamic(
   async () => await import("@/components/CollectionTable"),

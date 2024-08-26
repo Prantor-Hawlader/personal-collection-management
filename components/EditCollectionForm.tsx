@@ -11,6 +11,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import { Select, SelectItem } from "@nextui-org/react";
 
 import { editCollection } from "@/action/collection";
+import SubmitButton from "./SubmitButton";
 
 const customFieldTypes = [
   { name: "String", max: 3 },
@@ -119,9 +120,7 @@ export default function EditCollectionForm({
           </fieldset>
         ))}
       </div>
-      <Button color="success" type="submit" onPress={onClose}>
-        Edit Collection
-      </Button>
+      <SubmitButton onClose={onClose}>Edit Collection</SubmitButton>
     </form>
   );
 }

@@ -6,11 +6,12 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
-
 import "react-markdown-editor-lite/lib/index.css";
 import { Select, SelectItem } from "@nextui-org/react";
+import { useFormStatus } from "react-dom";
 
 import { createCollection } from "@/action/collection";
+import SubmitButton from "./SubmitButton";
 
 const customFieldTypes = [
   { name: "String", max: 3 },
@@ -28,9 +29,32 @@ export default function CollectionForm({
   categories,
   onClose,
 }: CollectionFormProps) {
+  // const clientAction = async (formData: FormData) => {
+  //   const newCollection = {
+  //     name: formData.get("name"),
+  //     description: formData.get("description"),
+  //     category: formData.get("category"),
+  //   };
+  //   const result = CollectionSchema.safeParse(newCollection);
+
+  //   if (!result.success) {
+  //     // console.log("Error", result.error.issues);
+  //     let errorMessage = "";
+
+  //     result.error.issues.forEach((issue) => {
+  //       errorMessage =
+  //         errorMessage + issue.path[0] + ": " + issue.message + ". ";
+  //     });
+  //     toast.error(errorMessage);
+
+  //     return;
+  //   }
+
+  //   await createCollection(result.data,formData);
+  // };
+
   const mdParser = new MarkdownIt();
 
-  console.log("collection form renderd");
   const [customFields, setCustomFields] = useState<Record<string, string[]>>(
     Object.fromEntries(customFieldTypes.map((type) => [type.name, []]))
   );
@@ -52,8 +76,13 @@ export default function CollectionForm({
   };
 
   return (
-    <form action={createCollection} className="w-full mx-auto mt-8">
-      <Input required className="mb-4" name="name" type="text" />
+    <form
+      action={async (formData) => {
+        await createCollection(formData);
+      }}
+      className="w-full mx-auto mt-8"
+    >
+      <Input isRequired className="mb-4" label="Name" name="name" type="text" />
 
       <MdEditor
         className="mb-4"
@@ -61,7 +90,12 @@ export default function CollectionForm({
         renderHTML={(text) => mdParser.render(text)}
       />
 
-      <Select className="mb-4" label="Select an category" name="category">
+      <Select
+        isRequired
+        className="mb-4"
+        label="Select an category"
+        name="category"
+      >
         {categories.map((cat: Category) => (
           <SelectItem key={cat.id} value={cat.id}>
             {cat.name}
@@ -105,9 +139,7 @@ export default function CollectionForm({
           </fieldset>
         ))}
       </div>
-      <Button color="success" type="submit" onPress={onClose}>
-        Create Collection
-      </Button>
+      <SubmitButton onClose={onClose}>Create Collection</SubmitButton>
     </form>
   );
 }
