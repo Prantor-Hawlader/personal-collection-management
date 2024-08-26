@@ -4,9 +4,11 @@ import { ReactNode, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
 
 export default function SubmitButton({
+  title,
   onClose,
   children,
 }: {
+  title: string;
   onClose: () => void;
   children: ReactNode;
 }) {
@@ -24,7 +26,7 @@ export default function SubmitButton({
     <Button color="success" disabled={pending} type="submit">
       {pending ? (
         <div className="flex items-center justify-center">
-          Loading <Spinner color="default" labelColor="foreground" size="sm" />
+          {title} <Spinner color="default" labelColor="foreground" size="sm" />
         </div>
       ) : (
         children

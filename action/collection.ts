@@ -56,7 +56,7 @@ export async function createCollection(formData: FormData) {
 
     return { status: "success" };
   } catch (error) {
-    return { error };
+    return { error: "Failed to create collection" };
   } finally {
     revalidatePath("/mycollection");
   }
@@ -109,7 +109,7 @@ export async function editCollection(formData: FormData) {
 
     return { status: "success" };
   } catch (error) {
-    return { error };
+    return { error: "Failed to edit collection" };
   } finally {
     revalidatePath("/mycollection");
   }
@@ -133,7 +133,7 @@ export async function deleteCollection(collectionId: string) {
 
     return { status: "success" };
   } catch (error) {
-    return { error };
+    return { error: "Failed to delete collection" };
   } finally {
     revalidatePath("/mycollection");
   }

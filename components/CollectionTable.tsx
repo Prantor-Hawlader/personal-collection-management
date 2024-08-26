@@ -27,6 +27,7 @@ import { EditIcon } from "./icons/EditIcon";
 import { DeleteIcon } from "./icons/DeleteIcon";
 import EditCollectionForm from "./EditCollectionForm";
 import { EyeIcon } from "./icons/EyeIcon";
+import toast from "react-hot-toast";
 
 const columns = [
   { name: "NAME", uid: "name" },
@@ -114,7 +115,16 @@ export default function CollectionTable({
                 <Button
                   isIconOnly
                   color="danger"
-                  onClick={() => deleteCollection(collection.id)}
+                  onClick={async () => {
+                    const res = await deleteCollection(collection.id);
+
+                    if (res?.status === "success") {
+                      toast.success("Collection deletd successfully");
+                    }
+                    if (res?.error) {
+                      toast.error(res.error);
+                    }
+                  }}
                 >
                   <DeleteIcon />
                 </Button>

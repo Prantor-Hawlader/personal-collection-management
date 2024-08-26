@@ -6,11 +6,12 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
-
 import "react-markdown-editor-lite/lib/index.css";
 import { Select, SelectItem } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 import { editCollection } from "@/action/collection";
+
 import SubmitButton from "./SubmitButton";
 
 const customFieldTypes = [
@@ -31,9 +32,25 @@ export default function EditCollectionForm({
   collection,
   onClose,
 }: CollectionFormProps) {
+  const [markdownContent, setMarkdownContent] = useState("");
+  const handleFormSubmit = async (formData: FormData) => {
+    if (!markdownContent) {
+      toast.error("Description is required");
+
+      return;
+    }
+
+    const res = await editCollection(formData);
+
+    if (res?.status) {
+      toast.success("Successfully edited collection");
+    }
+    if (res?.error) {
+      toast.error(res.error);
+    }
+  };
   const mdParser = new MarkdownIt();
 
-  console.log("collection form renderd");
   const [customFields, setCustomFields] = useState<Record<string, string[]>>(
     Object.fromEntries(customFieldTypes.map((type) => [type.name, []]))
   );
@@ -55,11 +72,11 @@ export default function EditCollectionForm({
   };
 
   return (
-    <form action={editCollection} className="w-full mx-auto mt-8">
+    <form action={handleFormSubmit} className="w-full mx-auto mt-8">
       <input hidden name="collectionId" value={collection.id} />
 
       <Input
-        required
+        isRequired
         className="mb-4"
         defaultValue={collection.name}
         name="name"
@@ -71,9 +88,15 @@ export default function EditCollectionForm({
         defaultValue={collection.description}
         name="description"
         renderHTML={(text) => mdParser.render(text)}
+        onChange={({ text }) => setMarkdownContent(text)}
       />
 
-      <Select className="mb-4" label="Select an category" name="category">
+      <Select
+        isRequired
+        className="mb-4"
+        label="Select an category"
+        name="category"
+      >
         {categories.map((cat: Category) => (
           <SelectItem key={cat.id} value={cat.id}>
             {cat.name}
@@ -120,7 +143,9 @@ export default function EditCollectionForm({
           </fieldset>
         ))}
       </div>
-      <SubmitButton onClose={onClose}>Edit Collection</SubmitButton>
+      <SubmitButton title={"Editing"} onClose={onClose}>
+        Edit Collection
+      </SubmitButton>
     </form>
   );
 }

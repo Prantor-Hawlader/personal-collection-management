@@ -44,32 +44,9 @@ export default function CollectionForm({
       toast.success("Successfully created collection");
     }
     if (res?.error) {
-      toast.error("Failed to create collection");
+      toast.error(res.error);
     }
   };
-  // const clientAction = async (formData: FormData) => {
-  //   const newCollection = {
-  //     name: formData.get("name"),
-  //     description: formData.get("description"),
-  //     category: formData.get("category"),
-  //   };
-  //   const result = CollectionSchema.safeParse(newCollection);
-
-  //   if (!result.success) {
-  //     // console.log("Error", result.error.issues);
-  //     let errorMessage = "";
-
-  //     result.error.issues.forEach((issue) => {
-  //       errorMessage =
-  //         errorMessage + issue.path[0] + ": " + issue.message + ". ";
-  //     });
-  //     toast.error(errorMessage);
-
-  //     return;
-  //   }
-
-  //   await createCollection(result.data,formData);
-  // };
 
   const mdParser = new MarkdownIt();
 
@@ -153,7 +130,9 @@ export default function CollectionForm({
           </fieldset>
         ))}
       </div>
-      <SubmitButton onClose={onClose}>Create Collection</SubmitButton>
+      <SubmitButton title={"Creating"} onClose={onClose}>
+        Create Collection
+      </SubmitButton>
     </form>
   );
 }
