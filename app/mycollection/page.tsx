@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import prisma from "@/db/prisma";
 import { getSession } from "@/lib/session";
-import AddNewCollection from "@/components/AddNewCollection";
+import AddNewCollection from "@/components/AddnewCollection";
 
 const CollectionTable = dynamic(
   async () => await import("@/components/CollectionTable"),
