@@ -6,7 +6,7 @@ import AddNewItemBtn from "@/components/AddNewItemBtn";
 const ItemTable = dynamic(async () => await import("@/components/ItemTable"), {
   ssr: false,
 });
-const collection = async ({ params }: { params: { collectionId: string } }) => {
+const Collection = async ({ params }: { params: { collectionId: string } }) => {
   const { collectionId } = params;
   const items = await prisma.item.findMany({
     where: { collectionId },
@@ -52,4 +52,4 @@ const collection = async ({ params }: { params: { collectionId: string } }) => {
   );
 };
 
-export default collection;
+export default Collection;

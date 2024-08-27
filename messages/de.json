@@ -3,10 +3,14 @@
     "root":"Heim",
     "cl": "Sammlungen",
     "mcl": "Meine Sammlung",
-    "author": "Verwaltung"
+    "author": "Verwaltung",
+    "search" : "Suchen..."
   },
   "HomePage": {
-    "greet": "Willkommen"
+    "greet": "Willkommen",
+    "title1" : "Zuletzt hinzugefügt",
+    "title2" : "Top 5 dergrößten",
+    "title3" : "Schlagwörter"
   },
   "LocaleSwitcher": {
     "de": "Deutsch",
@@ -18,7 +22,12 @@
     "login": "Einloggen",
     "logout": "Ausloggen"
   },
-  "ProfilePage": {
-    "title": "Profil"
+  "LoginPage": {
+    "title": "Einloggen",
+    "description" : "Geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein, um sich bei Ihrem Konto anzumelden"
+  },
+  "RegisterPage": {
+    "title": "Registrieren",
+    "description" : "Lass uns anfangen"
   }
 }

@@ -22,17 +22,24 @@ const customFieldTypes = [
   { name: "Date", max: 3 },
 ];
 
+type CollectionProps = Collection & {
+  category: Category;
+};
 type CollectionFormProps = {
   categories: Category[];
-  collection: Collection;
+  collection: CollectionProps;
+
   onClose: () => void;
 };
 export default function EditCollectionForm({
   categories,
   collection,
+
   onClose,
 }: CollectionFormProps) {
-  const [markdownContent, setMarkdownContent] = useState("");
+  const [markdownContent, setMarkdownContent] = useState(
+    collection.description
+  );
   const handleFormSubmit = async (formData: FormData) => {
     if (!markdownContent) {
       toast.error("Description is required");

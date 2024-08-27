@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import prisma from "@/db/prisma";
 import { getSession } from "@/lib/session";
@@ -12,12 +12,12 @@ const CollectionTable = dynamic(
   }
 );
 
-const myCollection = async () => {
+const Collection = async ({ params }: { params: { userId: string } }) => {
   const session = await getSession();
-  const userId = session?.user.id;
 
-  if (!session) redirect("/");
+  if (session?.user.role !== "admin" || !session) notFound();
 
+  const { userId } = params;
   const collections = await prisma.collection.findMany({
     where: { userId },
     include: {
@@ -35,4 +35,4 @@ const myCollection = async () => {
   );
 };
 
-export default myCollection;
+export default Collection;

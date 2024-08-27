@@ -64,15 +64,15 @@ export async function createCollection(formData: FormData) {
 
 export async function editCollection(formData: FormData) {
   const session = await getSession();
+
+  if (!session) return;
   const userId = session?.user?.id;
-
-  if (!userId) return;
-
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const category = formData.get("category") as string;
   const imageFile = formData.get("image") as File | null;
   const collectionId = formData.get("collectionId") as string;
+
   let url: string | undefined;
 
   if (imageFile && imageFile.size > 0) {
@@ -116,20 +116,14 @@ export async function editCollection(formData: FormData) {
 }
 
 export async function deleteCollection(collectionId: string) {
-  try {
-    const session = await getSession();
-    const userId = session?.user?.id;
+  const session = await getSession();
 
-    if (!session) return;
-    if (session?.user.role === "admin") {
-      await prisma.collection.delete({
-        where: { id: collectionId },
-      });
-    } else {
-      await prisma.collection.delete({
-        where: { id: collectionId, userId },
-      });
-    }
+  if (!session) return;
+
+  try {
+    await prisma.collection.delete({
+      where: { id: collectionId },
+    });
 
     return { status: "success" };
   } catch (error) {

@@ -45,6 +45,8 @@ export async function createItem(formData: FormData) {
       const [_, fieldType, fieldNumber] = key.split("_");
       const dbField = `custom${fieldType}${fieldNumber}`;
 
+      const cvalue = formData.get(key);
+      console.log("cvalue", cvalue);
       if (fieldType === "Boolean") {
         itemData[dbField] = value === "on";
       } else if (fieldType === "Integer") {
@@ -56,13 +58,6 @@ export async function createItem(formData: FormData) {
       }
     }
   });
-  for (let i = 1; i <= 3; i++) {
-    const booleanField = `customBoolean${i}`;
-
-    if (!(booleanField in itemData)) {
-      itemData[booleanField] = false;
-    }
-  }
 
   try {
     await prisma.item.create({ data: itemData });
@@ -96,7 +91,7 @@ export async function editItem(formData: FormData) {
     }
   });
 
-  const NewitemData: any = {
+  const newItemData: any = {
     name,
     tags: {
       set: [],
@@ -114,28 +109,21 @@ export async function editItem(formData: FormData) {
       const dbField = `custom${fieldType}${fieldNumber}`;
 
       if (fieldType === "Boolean") {
-        NewitemData[dbField] = value === "on";
+        newItemData[dbField] = value === "on";
       } else if (fieldType === "Integer") {
-        NewitemData[dbField] = parseInt(value as string);
+        newItemData[dbField] = parseInt(value as string);
       } else if (fieldType === "Date") {
-        NewitemData[dbField] = new Date(value as string);
+        newItemData[dbField] = new Date(value as string);
       } else {
-        NewitemData[dbField] = value;
+        newItemData[dbField] = value;
       }
     }
   });
-  for (let i = 1; i <= 3; i++) {
-    const booleanField = `customBoolean${i}`;
-
-    if (!(booleanField in NewitemData)) {
-      NewitemData[booleanField] = false;
-    }
-  }
 
   try {
     await prisma.item.update({
       where: { id: itemId },
-      data: NewitemData,
+      data: newItemData,
     });
 
     return { status: "success" };
@@ -177,7 +165,7 @@ export async function deleteItem(itemId: string, collectionId: string) {
       }
     }
 
-    return { success: true };
+    return { status: "success" };
   } catch (error) {
     return { error: "Failed to delete item" };
   } finally {

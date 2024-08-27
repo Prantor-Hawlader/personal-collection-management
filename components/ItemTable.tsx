@@ -25,6 +25,7 @@ import { deleteItem } from "@/action/item";
 import { ChevronDownIcon } from "./icons/ChevronDownIcon";
 import { SearchIcon } from "./icons/SearchIcon";
 import { VerticalDotsIcon } from "./icons/VerticalDotsIcon";
+import toast from "react-hot-toast";
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "tags", "actions"];
 
@@ -193,16 +194,19 @@ export default function ItemTable({ collection, item }: any) {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>
-                  <Link href={`/item/${item.id}`}>View</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href={`/editItem/${item.id}`}>Edit</Link>
-                </DropdownItem>
+                <DropdownItem href={`/item/${item.id}`}>View</DropdownItem>
+                <DropdownItem href={`/editItem/${item.id}`}>Edit</DropdownItem>
 
                 <DropdownItem
-                  onClick={() => {
-                    deleteItem(item.id, collection.id);
+                  onPress={async () => {
+                    const res = await deleteItem(item.id, collection.id);
+
+                    if (res?.status === "success") {
+                      toast.success("Collection deletd successfully");
+                    }
+                    if (res?.error) {
+                      toast.error(res.error);
+                    }
                   }}
                 >
                   Delete

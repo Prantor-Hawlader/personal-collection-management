@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@nextui-org/react";
+import { useTranslations } from "next-intl";
 
 const SearchInput = () => {
+  const t = useTranslations("NavMenu");
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
 
@@ -19,7 +21,7 @@ const SearchInput = () => {
     <form className="w-full" onSubmit={handleSearchSubmit}>
       <Input
         className="w-full"
-        placeholder="Search..."
+        placeholder={t("search")}
         type="search"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

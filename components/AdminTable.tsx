@@ -158,6 +158,9 @@ export default function AdminTable({ users }: UsersProps) {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
+                <DropdownItem href={`/collection/${user.id}`}>
+                  View
+                </DropdownItem>
                 {user.role === "user" ? (
                   <DropdownItem onClick={() => makeAdmin(user.id)}>
                     Make admin

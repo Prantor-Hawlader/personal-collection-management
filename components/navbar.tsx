@@ -23,7 +23,8 @@ import SearchBar from "./SearchBar";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 export const Navbar = ({ session }: any) => {
-  const t = useTranslations("Button");
+  const btn = useTranslations("Button");
+  const menu = useTranslations("NavMenu");
 
   return (
     <NextUINavbar isBordered maxWidth="xl" position="sticky">
@@ -45,7 +46,8 @@ export const Navbar = ({ session }: any) => {
                 color="foreground"
                 href={item.href}
               >
-                {(!item.shouldShow || item.shouldShow(session)) && item.label}
+                {(!item.shouldShow || item.shouldShow(session)) &&
+                  menu(item.label)}
               </NextLink>
             </NavbarItem>
           ))}
@@ -59,7 +61,7 @@ export const Navbar = ({ session }: any) => {
         <NavbarItem className="hidden sm:flex gap-2">
           {!session ? (
             <NextLink href="/login">
-              <MyButton>{t("login")}</MyButton>
+              <MyButton>{btn("login")}</MyButton>
             </NextLink>
           ) : (
             <form
@@ -68,7 +70,7 @@ export const Navbar = ({ session }: any) => {
                 await signOut();
               }}
             >
-              <MyButton>{t("logout")}</MyButton>
+              <MyButton>{btn("logout")}</MyButton>
             </form>
           )}
           <LanguageSwitcher />
@@ -104,14 +106,15 @@ export const Navbar = ({ session }: any) => {
                 href={item.href}
                 size="lg"
               >
-                {(!item.shouldShow || item.shouldShow(session)) && item.label}
+                {(!item.shouldShow || item.shouldShow(session)) &&
+                  menu(item.label)}
               </Link>
             </NavbarMenuItem>
           ))}
           <NavbarMenuItem className="w-1/4">
             {!session ? (
               <NextLink href="/login">
-                <MyButton>{t("login")} </MyButton>
+                <MyButton>{btn("login")} </MyButton>
               </NextLink>
             ) : (
               <form
@@ -120,7 +123,7 @@ export const Navbar = ({ session }: any) => {
                   await signOut();
                 }}
               >
-                <MyButton>{t("logout")}</MyButton>
+                <MyButton>{btn("logout")}</MyButton>
               </form>
             )}
           </NavbarMenuItem>

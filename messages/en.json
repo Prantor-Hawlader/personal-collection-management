@@ -3,10 +3,14 @@
     "root":"Home",
     "cl": "Collections",
     "mcl": "My collection",
-    "author": "Admin"
+    "author": "Admin",
+    "search" : "Search..."
   },
   "HomePage": {
-    "greet": "Welcome"
+    "greet": "Welcome",
+    "title1" : "Recently added",
+    "title2" : "Top 5 largest",
+    "title3" : "Tags"
   },
   "LocaleSwitcher": {
     "de": "Deutsch",
@@ -19,7 +23,17 @@
     "login": "Login",
     "logout": "Logout"
   },
-  "ProfilePage": {
-    "title": "Profile"
+  "LoginPage": {
+    "title": "Login",
+    "description" : "Enter your email and password to login to your account"
+  },
+  "RegisterPage": {
+    "title": "Register",
+    "description" : "Let's get started"
+
+
   }
+
+
+
 }

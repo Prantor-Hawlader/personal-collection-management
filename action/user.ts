@@ -15,12 +15,12 @@ const login = async (formData: FormData) => {
   const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user) {
-    return "User not found";
+    return { status: "User not found" };
   }
   if (user.status === "blocked") {
     console.log("Sorry you are blocked");
 
-    return "User is blocked";
+    return { status: "You are blocked" };
   }
 
   try {
@@ -49,13 +49,13 @@ const register = async (formData: FormData) => {
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
 
-  if (existingUser) throw new Error("User already exists");
+  if (existingUser) return { status: "User already exists" };
 
   const hashedPassword = await hash(password, 12);
 
   await prisma.user.create({ data: { name, email, password: hashedPassword } });
 
-  redirect("/");
+  redirect("/login");
 };
 
 const fetchAllUsers = async () => {

@@ -51,6 +51,7 @@ export default function EditItemForm({ item, tags, onClose }: any) {
 
         <CreatableSelect
           isMulti
+          required
           classNames={{
             control: () =>
               "border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500",
@@ -98,7 +99,7 @@ export default function EditItemForm({ item, tags, onClose }: any) {
                   {type === "Boolean" && (
                     <div className="flex gap-2">
                       <input
-                        defaultValue={item[`custom${type}${index + 1}`]}
+                        defaultChecked={item[`custom${type}${index + 1}`]}
                         name={`custom_${type}_${index + 1}`}
                         type="checkbox"
                       />

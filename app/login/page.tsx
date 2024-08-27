@@ -1,18 +1,19 @@
 "use client";
 import { Button, Card, CardBody, CardFooter, Input } from "@nextui-org/react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { login } from "@/action/user";
 
 export default function Login() {
+  const t = useTranslations("LoginPage");
+
   return (
     <div className="flex flex-col items-center justify-center">
       <Card className="w-full max-w-md h-full p-4">
         <div className="flex flex-col items-center justify-center p-5">
-          <p className="text-3xl font-bold">Login</p>
-          <p className="mt-2 text-small text-default-500">
-            Enter your email and password to login to your account.
-          </p>
+          <p className="text-3xl font-bold">{t("title")}</p>
+          <p className="mt-2 text-small text-default-500">{t("description")}</p>
         </div>
         <form action={login}>
           <CardBody className="space-y-4">
@@ -42,7 +43,7 @@ export default function Login() {
               className="w-full bg-gradient-to-r from-[#00b7fa] to-[#01cfea]"
               type="submit"
             >
-              Login
+              {t("title")}
             </Button>
           </CardFooter>
         </form>

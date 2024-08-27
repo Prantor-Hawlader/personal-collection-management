@@ -1,5 +1,5 @@
 "use client";
-import { Input, Textarea, DatePicker } from "@nextui-org/react";
+import { Input, Textarea, DatePicker, Checkbox } from "@nextui-org/react";
 import CreatableSelect from "react-select/creatable";
 import toast from "react-hot-toast";
 
@@ -40,6 +40,7 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
     <div>
       <form
         action={handleFormSubmit}
+        aria-label="Item form"
         className="w-full grid grid-cols-1 gap-2 mb-2"
       >
         <Input name="collectionId" type="hidden" value={collection.id} />

@@ -48,21 +48,21 @@ export default async function Home() {
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="mt-2">
-          <h1 className={title()}>Recently added&nbsp;</h1>
+          <h1 className={title()}>{t("title1")}&nbsp;</h1>
           <h1 className={title({ color: "cyan" })}>items&nbsp;</h1>
           <Divider />
           <RecentItem recentItems={recentItems} />
         </div>
 
         <div className="mt-2">
-          <h1 className={title()}>Top 5 largest&nbsp;</h1>
+          <h1 className={title()}>{t("title2")}&nbsp;</h1>
           <h1 className={title({ color: "cyan" })}>collections&nbsp;</h1>
           <Divider />
           <TopCollection largestCollections={largestCollections} />
         </div>
 
         <div className="mt-2">
-          <h1 className={title()}>Tags&nbsp;</h1>
+          <h1 className={title()}>{t("title3")}&nbsp;</h1>
           <h1 className={title({ color: "cyan" })}>cloud&nbsp;</h1>
           <Divider />
           <TagCloud tags={tags} />

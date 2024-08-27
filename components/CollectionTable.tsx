@@ -7,7 +7,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  User,
+  User as Avatar,
   Tooltip,
   ChipProps,
   Button,
@@ -16,10 +16,12 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
+  Chip,
 } from "@nextui-org/react";
 import { Category, Collection } from "@prisma/client";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import toast from "react-hot-toast";
 
 import { deleteCollection } from "@/action/collection";
 
@@ -27,24 +29,28 @@ import { EditIcon } from "./icons/EditIcon";
 import { DeleteIcon } from "./icons/DeleteIcon";
 import EditCollectionForm from "./EditCollectionForm";
 import { EyeIcon } from "./icons/EyeIcon";
-import toast from "react-hot-toast";
 
 const columns = [
   { name: "NAME", uid: "name" },
   { name: "DESCRIPTION", uid: "description" },
+  { name: "CATEGORY", uid: "category" },
+
   { name: "ACTIONS", uid: "actions" },
 ];
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  books: "success",
-  coins: "danger",
-  cloths: "warning",
-  gadgets: "warning",
-  others: "warning",
+const categoryColorMap: Record<string, ChipProps["color"]> = {
+  Books: "success",
+  Coins: "primary",
+  Cloths: "secondary",
+  Gadgets: "default",
+  Others: "warning",
 };
 
+type CollectionProps = Collection & {
+  category: Category;
+};
 type CollectionTableProps = {
-  collections: Collection[];
+  collections: CollectionProps[];
   categories: Category[];
 };
 
@@ -53,19 +59,16 @@ export default function CollectionTable({
   categories,
 }: CollectionTableProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [editingCollection, setEditingCollection] = useState<Collection | null>(
-    null
-  );
+  const [editingCollection, setEditingCollection] =
+    useState<CollectionProps | null>(null);
 
-  console.log("collectionTable rendered", collections);
-
-  const renderCell = (collection: Collection, columnKey: React.Key) => {
+  const renderCell = (collection: CollectionProps, columnKey: React.Key) => {
     const cellValue = collection[columnKey as keyof Collection];
 
     switch (columnKey) {
       case "name":
         return (
-          <User
+          <Avatar
             avatarProps={{
               radius: "lg",
               src:
@@ -74,15 +77,24 @@ export default function CollectionTable({
             }}
             name={cellValue}
           >
-            <Link href={`/mycollection/${collection.id}`}>
-              {collection.categoryId}
-            </Link>
-          </User>
+            <Link href={`/mycollection/${collection.id}`}>{cellValue}</Link>
+          </Avatar>
         );
       case "description":
         return (
           <div className="flex flex-col">
             <ReactMarkdown>{cellValue}</ReactMarkdown>
+          </div>
+        );
+      case "category":
+        return (
+          <div className="flex flex-col">
+            <Chip
+              className="text-bold"
+              color={categoryColorMap[collection.category.name]}
+            >
+              {collection.category.name}
+            </Chip>
           </div>
         );
       case "actions":
@@ -102,6 +114,7 @@ export default function CollectionTable({
                   color="warning"
                   onPress={() => {
                     setEditingCollection(collection);
+
                     onOpen();
                   }}
                 >
@@ -151,7 +164,7 @@ export default function CollectionTable({
           )}
         </TableHeader>
         <TableBody emptyContent={"No collections found"} items={collections}>
-          {(item: Collection) => (
+          {(item: CollectionProps) => (
             <TableRow key={item.id}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
