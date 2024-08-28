@@ -1,7 +1,8 @@
 "use client";
-import { Input, Textarea, DatePicker, Checkbox } from "@nextui-org/react";
+import { Input, Textarea, DatePicker } from "@nextui-org/react";
 import CreatableSelect from "react-select/creatable";
 import toast from "react-hot-toast";
+import { Collection, Tag } from "@prisma/client";
 
 import { createItem } from "@/action/item";
 import {
@@ -11,7 +12,16 @@ import {
 
 import SubmitButton from "./SubmitButton";
 
-export default function NewItemForm({ collection, tags, onClose }: any) {
+type NewItemFormProps = {
+  collection: Collection;
+  tags: Tag[];
+  onClose: () => void;
+};
+export default function NewItemForm({
+  collection,
+  tags,
+  onClose,
+}: NewItemFormProps) {
   function mapCollectionToCustomFields(collection: any) {
     return customFieldDefinitions.map((def: CustomFieldDefinition) => ({
       type: def.type,
@@ -79,7 +89,11 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
                   {type === "String" && (
                     <Input
                       isRequired
-                      label={collection[`custom${type}${index + 1}Name`]}
+                      label={
+                        collection[
+                          `custom${type}${index + 1}Name` as keyof Collection
+                        ]
+                      }
                       name={`custom_${type}_${index + 1}`}
                       type="text"
                     />
@@ -88,7 +102,11 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
                     <Textarea
                       isRequired
                       className="mb-6 md:mb-0"
-                      label={collection[`custom${type}${index + 1}Name`]}
+                      label={
+                        collection[
+                          `custom${type}${index + 1}Name` as keyof Collection
+                        ]
+                      }
                       name={`custom_${type}_${index + 1}`}
                       variant="bordered"
                     />
@@ -99,20 +117,34 @@ export default function NewItemForm({ collection, tags, onClose }: any) {
                         name={`custom_${type}_${index + 1}`}
                         type="checkbox"
                       />
-                      <p>{collection[`custom${type}${index + 1}Name`]}</p>
+                      <p>
+                        {
+                          collection[
+                            `custom${type}${index + 1}Name` as keyof Collection
+                          ]
+                        }
+                      </p>
                     </div>
                   )}
                   {type === "Date" && (
                     <DatePicker
                       isRequired
-                      label={collection[`custom${type}${index + 1}Name`]}
+                      label={
+                        collection[
+                          `custom${type}${index + 1}Name` as keyof Collection
+                        ]
+                      }
                       name={`custom_${type}_${index + 1}`}
                     />
                   )}
                   {type === "Integer" && (
                     <Input
                       isRequired
-                      label={collection[`custom${type}${index + 1}Name`]}
+                      label={
+                        collection[
+                          `custom${type}${index + 1}Name` as keyof Collection
+                        ]
+                      }
                       name={`custom_${type}_${index + 1}`}
                       type="number"
                     />

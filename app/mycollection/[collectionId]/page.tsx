@@ -10,7 +10,7 @@ const Collection = async ({ params }: { params: { collectionId: string } }) => {
   const { collectionId } = params;
   const items = await prisma.item.findMany({
     where: { collectionId },
-    include: { tags: true },
+    include: { tags: true, collection: true },
   });
   const tags = await prisma.tag.findMany({
     where: {
@@ -47,7 +47,7 @@ const Collection = async ({ params }: { params: { collectionId: string } }) => {
   return (
     <div className="w-full h-full">
       <AddNewItemBtn collection={collection!} tags={tags} />
-      <ItemTable collection={collection} item={items} />
+      <ItemTable collection={collection!} item={items} tags={tags} />
     </div>
   );
 };

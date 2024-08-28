@@ -6,6 +6,10 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
   Pagination,
   Selection,
   SortDescriptor,
@@ -15,21 +19,36 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  useDisclosure,
 } from "@nextui-org/react";
-import { Item, Tag } from "@prisma/client";
+import { Collection, Item, Tag } from "@prisma/client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 import { deleteItem } from "@/action/item";
 
 import { ChevronDownIcon } from "./icons/ChevronDownIcon";
 import { SearchIcon } from "./icons/SearchIcon";
 import { VerticalDotsIcon } from "./icons/VerticalDotsIcon";
-import toast from "react-hot-toast";
+import EditItemForm from "./EditItemForm";
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "tags", "actions"];
 
-export default function ItemTable({ collection, item }: any) {
+type ItemWithOthers = Item & {
+  collection: Collection;
+  tags: Tag[];
+};
+type ItemTableProps = {
+  collection: Collection;
+  item: ItemWithOthers[];
+  tags: Tag[];
+};
+export default function ItemTable({ collection, item, tags }: ItemTableProps) {
+  // const [loading, setLoading] = useState(false);
+  const [editingItem, setEditingItem] = useState<ItemWithOthers | null>(null);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const generateHeaderColumns = () => {
     const baseColumns = [
       { key: "name", label: "NAME", sortable: true },
@@ -38,7 +57,7 @@ export default function ItemTable({ collection, item }: any) {
 
     const createCustomColumns = (customFieldGroup: any) => {
       return customFieldGroup.keys
-        .map((key: any, index: any) => {
+        .map((key: string, index: number) => {
           const field = customFieldGroup.fields[index];
 
           if (field) {
@@ -170,9 +189,9 @@ export default function ItemTable({ collection, item }: any) {
     }
 
     if (columnKey === "tags") {
-      return cellValue.map((tag: Tag, index: number) => (
+      return cellValue?.map((tag: Tag, index: number) => (
         <span key={tag.id}>
-          <Link className="text-blue-500" href={`/tag/${tag.id}`}>
+          <Link className="text-blue-600" href={`/tag/${tag.id}`}>
             {tag.name}
           </Link>
           {index < cellValue.length - 1 && " "}
@@ -195,14 +214,22 @@ export default function ItemTable({ collection, item }: any) {
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem href={`/item/${item.id}`}>View</DropdownItem>
-                <DropdownItem href={`/editItem/${item.id}`}>Edit</DropdownItem>
+                {/* <DropdownItem href={`/editItem/${item.id}`}>Edit</DropdownItem> */}
+                <DropdownItem
+                  onClick={() => {
+                    setEditingItem(item);
+                    onOpen();
+                  }}
+                >
+                  Edit
+                </DropdownItem>
 
                 <DropdownItem
                   onPress={async () => {
                     const res = await deleteItem(item.id, collection.id);
 
                     if (res?.status === "success") {
-                      toast.success("Collection deletd successfully");
+                      toast.success("Item deletd successfully");
                     }
                     if (res?.error) {
                       toast.error(res.error);
@@ -215,6 +242,7 @@ export default function ItemTable({ collection, item }: any) {
             </Dropdown>
           </div>
         );
+
       default:
         return cellValue;
     }
@@ -378,7 +406,12 @@ export default function ItemTable({ collection, item }: any) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No items found"} items={sortedItems}>
+        <TableBody
+          emptyContent={"No items found"}
+          // isLoading={loading}
+          items={sortedItems}
+          // loadingContent={<Spinner label="Loading..." />}
+        >
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (
@@ -388,6 +421,39 @@ export default function ItemTable({ collection, item }: any) {
           )}
         </TableBody>
       </Table>
+
+      <Modal
+        isOpen={isOpen}
+        placement="bottom-center"
+        scrollBehavior="inside"
+        onOpenChange={() => {
+          if (isOpen) setEditingItem(null);
+          onOpenChange();
+        }}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Edit Item
+              </ModalHeader>
+              <ModalBody>
+                {editingItem && (
+                  <EditItemForm
+                    item={editingItem!}
+                    tags={tags}
+                    onClose={() => {
+                      onClose();
+                      setEditingItem(null);
+                      onOpenChange();
+                    }}
+                  />
+                )}
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

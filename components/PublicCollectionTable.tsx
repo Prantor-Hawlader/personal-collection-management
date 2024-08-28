@@ -9,9 +9,7 @@ import {
   TableCell,
   User,
 } from "@nextui-org/react";
-
 import ReactMarkdown from "react-markdown";
-
 import { Category, Collection } from "@prisma/client";
 import Link from "next/link";
 
@@ -32,8 +30,6 @@ type CollectionTableProps = {
 export default function PublicCollectionTable({
   collections,
 }: CollectionTableProps) {
-  console.log("PublicCollectionTable rendered", collections);
-
   const renderCell = (
     collection: CollectionWithCategory,
     columnKey: React.Key

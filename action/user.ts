@@ -2,7 +2,6 @@
 
 import { redirect } from "next/navigation";
 import { hash } from "bcryptjs";
-import { CredentialsSignin } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 import { signIn } from "@/auth";
@@ -15,12 +14,10 @@ const login = async (formData: FormData) => {
   const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user) {
-    return { status: "User not found" };
+    return { error: "User not found" };
   }
   if (user.status === "blocked") {
-    console.log("Sorry you are blocked");
-
-    return { status: "You are blocked" };
+    return { error: "You are blocked" };
   }
 
   try {
@@ -31,9 +28,7 @@ const login = async (formData: FormData) => {
       password,
     });
   } catch (error) {
-    const someError = error as CredentialsSignin;
-
-    return someError.cause;
+    return { error: "Failed to login" };
   }
   redirect("/");
 };
@@ -49,13 +44,21 @@ const register = async (formData: FormData) => {
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
 
-  if (existingUser) return { status: "User already exists" };
+  if (existingUser) return { error: "User already exists" };
 
   const hashedPassword = await hash(password, 12);
 
-  await prisma.user.create({ data: { name, email, password: hashedPassword } });
+  try {
+    await prisma.user.create({
+      data: { name, email, password: hashedPassword },
+    });
 
-  redirect("/login");
+    return { message: "User registered successfully" };
+  } catch (error) {
+    return { error: "Failed to create user" };
+  } finally {
+    redirect("/login");
+  }
 };
 
 const fetchAllUsers = async () => {
@@ -70,9 +73,9 @@ async function deleteUser(userId: string) {
       where: { id: userId },
     });
 
-    // return { success: true };
+    return { message: "User deleted successfully" };
   } catch (error) {
-    console.log("Error deleting user", error);
+    return { message: "Failed to delete user" };
   } finally {
     revalidatePath("/admin");
   }
@@ -83,10 +86,7 @@ async function blockUser(userId: string) {
       where: { id: userId },
       data: { status: "blocked" },
     });
-
-    // return { success: true };
   } catch (error) {
-    console.log("Error blocking user", error);
   } finally {
     revalidatePath("/admin");
   }
@@ -97,10 +97,7 @@ async function unblockUser(userId: string) {
       where: { id: userId },
       data: { status: "active" },
     });
-
-    // return { success: true };
   } catch (error) {
-    console.log("Error Unblocking user", error);
   } finally {
     revalidatePath("/admin");
   }
@@ -112,7 +109,6 @@ async function makeAdmin(userId: string) {
       data: { role: "admin" },
     });
   } catch (error) {
-    console.log("Error making admin user", error);
   } finally {
     revalidatePath("/admin");
   }
@@ -127,7 +123,6 @@ async function makeNonAdmin(userId: string) {
       data: { role: "user" },
     });
   } catch (error) {
-    console.log("Error making non-admin user", error);
   } finally {
     revalidatePath("/admin");
     if (adminId === userId) {

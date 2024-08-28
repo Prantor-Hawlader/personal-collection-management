@@ -11,7 +11,7 @@ const SearchInput = () => {
   const router = useRouter();
 
   const handleSearchSubmit = (e: any) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
     if (searchTerm) {
       router.push(`/search?q=${searchTerm}`);
     }

@@ -1,5 +1,3 @@
-import React from "react";
-
 import CollectionSkeleton from "@/components/CollectionSkeleton";
 
 const Loading = () => {

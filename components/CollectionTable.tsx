@@ -10,7 +10,6 @@ import {
   User as Avatar,
   Tooltip,
   ChipProps,
-  Button,
   useDisclosure,
   Modal,
   ModalContent,
@@ -81,21 +80,15 @@ export default function CollectionTable({
           </Avatar>
         );
       case "description":
-        return (
-          <div className="flex flex-col">
-            <ReactMarkdown>{cellValue}</ReactMarkdown>
-          </div>
-        );
+        return <ReactMarkdown>{cellValue}</ReactMarkdown>;
       case "category":
         return (
-          <div className="flex flex-col">
-            <Chip
-              className="text-bold"
-              color={categoryColorMap[collection.category.name]}
-            >
-              {collection.category.name}
-            </Chip>
-          </div>
+          <Chip
+            className="text-bold"
+            color={categoryColorMap[collection.category.name]}
+          >
+            {collection.category.name}
+          </Chip>
         );
       case "actions":
         return (
@@ -109,42 +102,33 @@ export default function CollectionTable({
             </Tooltip>
             <Tooltip content="Edit collection">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <Button
-                  isIconOnly
-                  color="warning"
-                  onPress={() => {
+                <EditIcon
+                  onClick={() => {
                     setEditingCollection(collection);
 
                     onOpen();
                   }}
-                >
-                  <EditIcon />
-                </Button>
+                />
               </span>
             </Tooltip>
 
             <Tooltip color="danger" content="Delete collection">
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <Button
-                  isIconOnly
-                  color="danger"
+                <DeleteIcon
                   onClick={async () => {
                     const res = await deleteCollection(collection.id);
 
-                    if (res?.status === "success") {
+                    if (res?.status === "success")
                       toast.success("Collection deletd successfully");
-                    }
-                    if (res?.error) {
-                      toast.error(res.error);
-                    }
+
+                    if (res?.error) toast.error(res.error);
                   }}
-                >
-                  <DeleteIcon />
-                </Button>
+                />
               </span>
             </Tooltip>
           </div>
         );
+
       default:
         return cellValue;
     }
@@ -187,7 +171,7 @@ export default function CollectionTable({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Edit Item
+                Edit Collection
               </ModalHeader>
               <ModalBody>
                 {editingCollection && (

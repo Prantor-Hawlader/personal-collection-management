@@ -2,11 +2,19 @@
 import { Button, Card, CardBody, CardFooter, Input } from "@nextui-org/react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 
 import { register } from "@/action/user";
 
 export default function Register() {
   const t = useTranslations("RegisterPage");
+  const handleRegister = async (formData: FormData) => {
+    const res = await register(formData);
+
+    if (res.message) toast.success(res.message);
+
+    if (res.error) toast.error(res.error);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -16,7 +24,7 @@ export default function Register() {
           <p className="mt-2 text-small text-default-500">{t("description")}</p>
         </div>
 
-        <form action={register}>
+        <form action={handleRegister}>
           <CardBody className="space-y-4">
             <div className="space-y-2">
               <Input

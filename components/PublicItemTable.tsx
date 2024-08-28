@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { Item, Tag } from "@prisma/client";
+import { Collection, Item, Tag } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 
@@ -25,8 +25,14 @@ import { SearchIcon } from "./icons/SearchIcon";
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "tags"];
 
-export default function PublicItemTable({ collection, item }: any) {
-  console.log("public item table rendered");
+type PublicItemTableProps = {
+  collection: Collection;
+  item: Item[];
+};
+export default function PublicItemTable({
+  collection,
+  item,
+}: PublicItemTableProps) {
   const generateHeaderColumns = () => {
     const baseColumns = [
       { key: "name", label: "NAME", sortable: true },
@@ -35,7 +41,7 @@ export default function PublicItemTable({ collection, item }: any) {
 
     const createCustomColumns = (customFieldGroup: any) => {
       return customFieldGroup.keys
-        .map((key: any, index: any) => {
+        .map((key: string, index: number) => {
           const field = customFieldGroup.fields[index];
 
           if (field) {
@@ -155,10 +161,8 @@ export default function PublicItemTable({ collection, item }: any) {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback((item: any, columnKey: string) => {
-    // if (cellValue === null || cellValue === undefined) return "";
     const cellValue = item[columnKey];
 
-    console.log("columnKey,", columnKey);
     if (columnKey.startsWith("customBoolean")) {
       return cellValue ? "Yes" : "No";
     }
@@ -168,12 +172,9 @@ export default function PublicItemTable({ collection, item }: any) {
     }
 
     if (columnKey === "tags") {
-      console.log("Tags cellValue:", cellValue);
-
       return cellValue.map((tag: Tag, index: number) => (
-        // <Link key={tag.id} href={`/tag/${tag.id}`}>
         <span key={tag.id}>
-          <Link className="text-blue-500" href={`/tag/${tag.id}`}>
+          <Link className="text-blue-600" href={`/tag/${tag.id}`}>
             {tag.name}
           </Link>
           {index < cellValue.length - 1 && ", "}
@@ -181,16 +182,12 @@ export default function PublicItemTable({ collection, item }: any) {
       ));
     }
 
-    switch (columnKey) {
-      case "name":
-        return (
-          <Link className="text-blue-600 font-bold" href={`/item/${item.id}`}>
-            {cellValue}
-          </Link>
-        );
-
-      default:
-        return cellValue;
+    if (columnKey === "name") {
+      return (
+        <Link className="text-blue-600 font-bold" href={`/item/${item.id}`}>
+          {cellValue}
+        </Link>
+      );
     }
   }, []);
 
@@ -309,13 +306,11 @@ export default function PublicItemTable({ collection, item }: any) {
       wrapper: ["max-h-[382px]", "max-w-3xl"],
       th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
-        // changing the rows border radius
-        // first
         "group-data-[first=true]:first:before:rounded-none",
         "group-data-[first=true]:last:before:rounded-none",
-        // middle
+
         "group-data-[middle=true]:before:rounded-none",
-        // last
+
         "group-data-[last=true]:first:before:rounded-none",
         "group-data-[last=true]:last:before:rounded-none",
       ],

@@ -42,7 +42,7 @@ const Items = async ({ params }: { params: { collectionId: string } }) => {
 
   return (
     <div className="w-full h-full">
-      <PublicItemTable collection={collection} item={items} />
+      <PublicItemTable collection={collection!} item={items} />
     </div>
   );
 };

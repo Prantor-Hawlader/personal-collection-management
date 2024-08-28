@@ -2,11 +2,17 @@
 import { Button, Card, CardBody, CardFooter, Input } from "@nextui-org/react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 
 import { login } from "@/action/user";
 
 export default function Login() {
   const t = useTranslations("LoginPage");
+  const handleLogin = async (formData: FormData) => {
+    const res = await login(formData);
+
+    if (res.error) toast.error(res.error);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -15,7 +21,7 @@ export default function Login() {
           <p className="text-3xl font-bold">{t("title")}</p>
           <p className="mt-2 text-small text-default-500">{t("description")}</p>
         </div>
-        <form action={login}>
+        <form action={handleLogin}>
           <CardBody className="space-y-4">
             <div className="space-y-2">
               <Input
