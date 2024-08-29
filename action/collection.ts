@@ -121,6 +121,32 @@ export async function deleteCollection(collectionId: string) {
   if (!session) return;
 
   try {
+    const items = await prisma.item.findMany({
+      where: { collectionId },
+      include: { tags: true },
+    });
+
+    for (const item of items) {
+      for (const tag of item.tags) {
+        const associatedItemsCount = await prisma.item.count({
+          where: {
+            collectionId: { not: collectionId },
+            tags: { some: { id: tag.id } },
+          },
+        });
+
+        if (
+          associatedItemsCount === 0 &&
+          tag.name !== "Mysterious" &&
+          tag.name !== "Adventure"
+        ) {
+          await prisma.tag.delete({
+            where: { id: tag.id },
+          });
+        }
+      }
+    }
+
     await prisma.collection.delete({
       where: { id: collectionId },
     });
