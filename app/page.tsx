@@ -16,7 +16,7 @@ export default async function Home() {
     orderBy: {
       createdAt: "desc",
     },
-    take: 5,
+    take: 7,
     include: { collection: { include: { user: true } } },
   });
 

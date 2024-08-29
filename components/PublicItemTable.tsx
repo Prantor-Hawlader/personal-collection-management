@@ -19,6 +19,7 @@ import {
 import { Collection, Item, Tag } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
+import { format } from "date-fns";
 
 import { ChevronDownIcon } from "./icons/ChevronDownIcon";
 import { SearchIcon } from "./icons/SearchIcon";
@@ -168,7 +169,7 @@ export default function PublicItemTable({
     }
 
     if (columnKey.startsWith("customDate")) {
-      return new Date(cellValue).toLocaleDateString();
+      return format(new Date(cellValue), "MMMM dd, yyyy");
     }
 
     if (columnKey === "tags") {

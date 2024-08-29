@@ -25,6 +25,7 @@ import { Collection, Item, Tag } from "@prisma/client";
 import Link from "next/link";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { format } from "date-fns";
 
 import { deleteItem } from "@/action/item";
 
@@ -185,7 +186,7 @@ export default function ItemTable({ collection, item, tags }: ItemTableProps) {
     }
 
     if (columnKey.startsWith("customDate")) {
-      return new Date(cellValue).toLocaleDateString();
+      return format(new Date(cellValue), "MMMM dd, yyyy");
     }
 
     if (columnKey === "tags") {

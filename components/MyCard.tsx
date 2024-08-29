@@ -4,6 +4,7 @@ import { AiFillLike } from "react-icons/ai";
 import React from "react";
 import Link from "next/link";
 import { Tag } from "@prisma/client";
+import { format } from "date-fns";
 
 import pic from "@/public/softwareGroup.jpeg";
 import { likeItem } from "@/action/item";
@@ -47,10 +48,10 @@ const MyCard = ({
           />
         </div>
         <MagicCard className="h-full w-full p-5 overflow-y-scroll">
-          <p className="font-serif text-xl">
+          <p className="font-serif text-xl text-cyan-500">
             Name: <span className="text-mono">{item.name}</span>
           </p>
-          <p className="font-serif">
+          <p className="font-serif text-cyan-500">
             {" "}
             Tags :{" "}
             {item.tags.map((tag: Tag, index: number) => (
@@ -71,12 +72,12 @@ const MyCard = ({
 
                 return (
                   <div key={`${type}_${index}`}>
-                    <p className="font-serif text-xl">
+                    <p className="font-serif text-xl text-cyan-500">
                       {fieldLabel}:{" "}
                       {type === "Boolean" && (fieldValue ? "Yes" : "No")}
                       {type === "Date" && (
                         <span className="font-mono">
-                          {new Date(fieldValue).toLocaleDateString()}
+                          {format(new Date(fieldValue), "MMMM dd, yyyy")}
                         </span>
                       )}
                       {(type === "String" ||

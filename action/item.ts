@@ -19,7 +19,7 @@ export async function createItem(formData: FormData) {
 
   tagsValue.forEach((tag) => {
     if (typeof tag === "string") {
-      if (tag.startsWith("cl") && tag.length > 20) {
+      if (tag.startsWith("cl")) {
         existingTagIds.push(tag);
       } else {
         newTagNames.push(tag);
