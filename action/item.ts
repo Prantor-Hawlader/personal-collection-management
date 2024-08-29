@@ -45,8 +45,6 @@ export async function createItem(formData: FormData) {
       const [_, fieldType, fieldNumber] = key.split("_");
       const dbField = `custom${fieldType}${fieldNumber}`;
 
-      const cvalue = formData.get(key);
-      console.log("cvalue", cvalue);
       if (fieldType === "Boolean") {
         itemData[dbField] = value === "on";
       } else if (fieldType === "Integer") {
@@ -130,7 +128,7 @@ export async function editItem(formData: FormData) {
   } catch (error) {
     return { error: "Failed to edit item" };
   } finally {
-    redirect(`/mycollection/${collectionId}`);
+    revalidatePath(`/mycollection/${collectionId}`);
   }
 }
 

@@ -2,6 +2,8 @@
 import { Input, Textarea, DatePicker } from "@nextui-org/react";
 import CreatableSelect from "react-select/creatable";
 import { Item, Tag, Collection } from "@prisma/client";
+import { parseDate } from "@internationalized/date";
+import toast from "react-hot-toast";
 
 import { editItem } from "@/action/item";
 import {
@@ -44,13 +46,27 @@ export default function EditItemForm({
     label: tag.name,
   }));
 
+  const handleFormSubmit = async (formData: FormData) => {
+    const res = await editItem(formData);
+
+    if (res?.status) {
+      toast.success("Item successfully edited");
+    }
+    if (res?.error) {
+      toast.error(res.error);
+    }
+  };
+
   return (
-    <form action={editItem} className="w-full grid grid-cols-1 gap-2 mb-2">
+    <form
+      action={handleFormSubmit}
+      className="w-full grid grid-cols-1 gap-2 mb-2"
+    >
       <Input name="collectionId" type="hidden" value={collection.id} />
       <Input name="itemId" type="hidden" value={item.id} />
 
       <Input
-        required
+        isRequired
         defaultValue={item.name}
         label="Name"
         name="name"
@@ -90,6 +106,7 @@ export default function EditItemForm({
               <div key={`${type}_${index}`}>
                 {type === "String" && (
                   <Input
+                    isRequired
                     defaultValue={
                       item[`custom${type}${index + 1}` as keyof Item] as string
                     }
@@ -104,6 +121,7 @@ export default function EditItemForm({
                 )}
                 {type === "Text" && (
                   <Textarea
+                    isRequired
                     className="mb-6 md:mb-0"
                     defaultValue={
                       item[`custom${type}${index + 1}` as keyof Item] as string
@@ -139,6 +157,20 @@ export default function EditItemForm({
                 )}
                 {type === "Date" && (
                   <DatePicker
+                    isRequired
+                    defaultValue={
+                      item[`custom${type}${index + 1}` as keyof Item]
+                        ? parseDate(
+                            new Date(
+                              item[
+                                `custom${type}${index + 1}` as keyof Item
+                              ] as Date
+                            )
+                              .toISOString()
+                              .split("T")[0]
+                          )
+                        : undefined
+                    }
                     label={
                       collection[
                         `custom${type}${index + 1}Name` as keyof Collection
@@ -149,6 +181,7 @@ export default function EditItemForm({
                 )}
                 {type === "Integer" && (
                   <Input
+                    isRequired
                     defaultValue={
                       item[`custom${type}${index + 1}` as keyof Item] as string
                     }

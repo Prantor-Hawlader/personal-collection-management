@@ -46,7 +46,7 @@ const MyCard = ({
             width={600}
           />
         </div>
-        <MagicCard className="h-full w-full p-5">
+        <MagicCard className="h-full w-full p-5 overflow-y-scroll">
           <p className="font-serif text-xl">
             Name: <span className="text-mono">{item.name}</span>
           </p>
