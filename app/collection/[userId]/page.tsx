@@ -29,8 +29,12 @@ const Collection = async ({ params }: { params: { userId: string } }) => {
 
   return (
     <div className="w-full">
-      <AddNewCollection categories={categories} />
-      <CollectionTable categories={categories} collections={collections} />
+      <AddNewCollection categories={categories} userId={userId} />
+      <CollectionTable
+        categories={categories}
+        collections={collections}
+        userId={userId}
+      />
     </div>
   );
 };

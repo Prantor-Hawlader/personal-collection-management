@@ -51,11 +51,13 @@ type CollectionProps = Collection & {
 type CollectionTableProps = {
   collections: CollectionProps[];
   categories: Category[];
+  userId: string;
 };
 
 export default function CollectionTable({
   collections,
   categories,
+  userId,
 }: CollectionTableProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [editingCollection, setEditingCollection] =
@@ -178,6 +180,7 @@ export default function CollectionTable({
                   <EditCollectionForm
                     categories={categories}
                     collection={editingCollection}
+                    userId={userId}
                     onClose={() => {
                       onClose();
                       setEditingCollection(null);

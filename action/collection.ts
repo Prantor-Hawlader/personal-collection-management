@@ -10,11 +10,10 @@ import { uploadImage } from "./uploadImage";
 
 const customFieldTypes = ["String", "Text", "Boolean", "Date", "Integer"];
 
-export async function createCollection(formData: FormData) {
+export async function createCollection(formData: FormData, authorId: string) {
   const session = await getSession();
-  const userId = session?.user?.id;
 
-  if (!userId) return;
+  if (!session) return;
 
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
@@ -31,7 +30,7 @@ export async function createCollection(formData: FormData) {
   const collectionData: Prisma.CollectionCreateInput = {
     name,
     description,
-    user: { connect: { id: userId } },
+    user: { connect: { id: authorId } },
     category: { connect: { id: category } },
     ...(url && { image: url }),
   };
@@ -62,11 +61,10 @@ export async function createCollection(formData: FormData) {
   }
 }
 
-export async function editCollection(formData: FormData) {
+export async function editCollection(formData: FormData, authorId: string) {
   const session = await getSession();
 
   if (!session) return;
-  const userId = session?.user?.id;
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const category = formData.get("category") as string;
@@ -83,7 +81,7 @@ export async function editCollection(formData: FormData) {
   const collectionData: Prisma.CollectionCreateInput = {
     name,
     description,
-    user: { connect: { id: userId } },
+    user: { connect: { id: authorId } },
     category: { connect: { id: category } },
     ...(url && { image: url }),
   };

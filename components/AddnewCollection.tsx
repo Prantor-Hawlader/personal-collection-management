@@ -15,8 +15,9 @@ import CollectionForm from "./CollectionForm";
 
 type CategoryProps = {
   categories: Category[];
+  userId: string;
 };
-const AddNewCollection = ({ categories }: CategoryProps) => {
+const AddNewCollection = ({ categories, userId }: CategoryProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -42,7 +43,11 @@ const AddNewCollection = ({ categories }: CategoryProps) => {
                 Create collection
               </ModalHeader>
               <ModalBody>
-                <CollectionForm categories={categories} onClose={onClose} />
+                <CollectionForm
+                  categories={categories}
+                  userId={userId}
+                  onClose={onClose}
+                />
               </ModalBody>
             </>
           )}

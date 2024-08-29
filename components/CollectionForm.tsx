@@ -25,10 +25,12 @@ const customFieldTypes = [
 type CollectionFormProps = {
   categories: Category[];
   onClose: () => void;
+  userId: string;
 };
 export default function CollectionForm({
   categories,
   onClose,
+  userId,
 }: CollectionFormProps) {
   const [markdownContent, setMarkdownContent] = useState("");
   const handleFormSubmit = async (formData: FormData) => {
@@ -38,7 +40,7 @@ export default function CollectionForm({
       return;
     }
 
-    const res = await createCollection(formData);
+    const res = await createCollection(formData, userId);
 
     if (res?.status) {
       toast.success("Successfully created collection");

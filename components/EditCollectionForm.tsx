@@ -28,12 +28,13 @@ type CollectionProps = Collection & {
 type CollectionFormProps = {
   categories: Category[];
   collection: CollectionProps;
-
+  userId: string;
   onClose: () => void;
 };
 export default function EditCollectionForm({
   categories,
   collection,
+  userId,
 
   onClose,
 }: CollectionFormProps) {
@@ -47,7 +48,7 @@ export default function EditCollectionForm({
       return;
     }
 
-    const res = await editCollection(formData);
+    const res = await editCollection(formData, userId);
 
     if (res?.status) {
       toast.success("Successfully edited collection");
