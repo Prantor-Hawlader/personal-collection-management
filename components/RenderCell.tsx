@@ -1,4 +1,3 @@
-"use client";
 import {
   Button,
   Chip,
@@ -103,7 +102,7 @@ const RenderCell = ({ user, columnKey }: Props) => {
         </div>
       );
     default:
-      return;
+      return <div> {columnKey}</div>;
   }
 };
 
