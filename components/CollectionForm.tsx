@@ -75,7 +75,7 @@ export default function CollectionForm({
   return (
     <form action={handleFormSubmit} className="w-full mx-auto mt-8">
       <Input isRequired className="mb-4" label="Name" name="name" type="text" />
-
+      <h3 className="text-default-500 text-small mb-1">Collection details</h3>
       <MdEditor
         className="mb-4"
         name="description"

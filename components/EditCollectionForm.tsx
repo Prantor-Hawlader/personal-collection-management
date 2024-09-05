@@ -87,10 +87,11 @@ export default function EditCollectionForm({
         isRequired
         className="mb-4"
         defaultValue={collection.name}
+        label="Name"
         name="name"
         type="text"
       />
-
+      <h3 className="text-default-500 text-small mb-1">Collection details</h3>
       <MdEditor
         className="mb-4"
         defaultValue={collection.description}
