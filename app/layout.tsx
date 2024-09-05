@@ -4,14 +4,15 @@ import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { Toaster } from "react-hot-toast";
 
 import { getSession } from "@/lib/session";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
+import HelpBtn from "@/components/HelpBtn";
 
 import { Providers } from "./providers";
-import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: {
@@ -58,11 +59,12 @@ export default async function RootLayout({
                 {children}
                 <Toaster position="top-right" />
               </main>
-              <footer className="w-full flex items-center justify-center py-3">
+              <footer className="w-full flex items-center justify-center py-3 gap-2">
                 <Link className="flex items-center gap-1 text-current" href="/">
                   <span className="text-default-600">Powered by</span>
                   <p className="text-primary">Prantor Hawlader</p>
                 </Link>
+                <HelpBtn />
               </footer>
             </div>
           </Providers>

@@ -20,6 +20,12 @@ export const siteConfig = {
       shouldShow: (session: Session) =>
         session?.user?.role === "user" || session?.user?.role === "admin",
     },
+    {
+      label: "pf",
+      href: "/profile",
+      shouldShow: (session: Session) =>
+        session?.user?.role === "user" || session?.user?.role === "admin",
+    },
 
     {
       label: "author",

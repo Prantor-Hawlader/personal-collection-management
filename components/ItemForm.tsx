@@ -79,6 +79,7 @@ export default function NewItemForm({
           }}
           name="tags"
           options={tagOptions}
+          placeholder="Create or select tags"
         />
 
         {customFields.map(({ type, fields }) =>

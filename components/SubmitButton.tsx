@@ -23,7 +23,7 @@ export default function SubmitButton({
   }, [pending, onClose]);
 
   return (
-    <Button color="success" disabled={pending} type="submit">
+    <Button color="success" disabled={pending} size="sm" type="submit">
       {pending ? (
         <div className="flex items-center justify-center">
           {title} <Spinner color="default" labelColor="foreground" size="sm" />
