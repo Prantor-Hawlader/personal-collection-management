@@ -1,10 +1,7 @@
 "use client";
 import { Avatar } from "@nextui-org/react";
-import { Comment } from "@prisma/client";
 
 const Comments = ({ comments }: any) => {
-  console.log("comments page rendered", comments);
-
   return (
     <div className="flex flex-col w-full my-4">
       {comments.map((comment: any) => (

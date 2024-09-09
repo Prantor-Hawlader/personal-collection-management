@@ -4,9 +4,18 @@ import { getTickets } from "@/action/getTickets";
 import ConnectJira from "@/components/ConnectJira";
 import TicketsTable from "@/components/TicketsTable";
 import { subtitle } from "@/components/primitives";
+import { getSession } from "@/lib/session";
 
 const Help = async () => {
   const issues = await getTickets();
+  const session = await getSession();
+
+  if (!session)
+    return (
+      <div className="text-center text-2xl font-bold">
+        Please log in for creating ticket
+      </div>
+    );
 
   return (
     <div className="flex flex-col gap-2 items-center justify-center">

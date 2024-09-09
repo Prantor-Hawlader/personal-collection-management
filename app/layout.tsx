@@ -64,7 +64,7 @@ export default async function RootLayout({
                   <span className="text-default-600">Powered by</span>
                   <p className="text-primary">Prantor Hawlader</p>
                 </Link>
-                <HelpBtn />
+                {session && <HelpBtn />}
               </footer>
             </div>
           </Providers>
